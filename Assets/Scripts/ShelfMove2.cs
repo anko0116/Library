@@ -8,10 +8,11 @@ public class ShelfMove2 : MonoBehaviour
     bool grabbed;
     GameObject grabbedObj;
 
-    float shelfMinYCoord = -4.54f;
-    float shelfMaxYCoord = 4.54f;
-    float shelfMinXCoord = 18f;
-    float shelfMaxXCoord = 30f;
+    float shelfMinYCoord = -5.54f;
+    float shelfMaxYCoord = 5.54f;
+    // FIXME: mouse not bounded by the screen
+    float shelfMinXCoord = -18.0f;
+    float shelfMaxXCoord = 18.0f;
 
     void Start() {
         grabbed = false;
