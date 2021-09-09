@@ -21,9 +21,9 @@ THREE STATES TO CONSIDER:
     3. ON THE TABLE
 
 IMPLEMENTATION ORDER LIST:
+    3. Book changes its orientation depending on which screen it's on
     1. Book stays attached to the bookshelf even when bookshelf moves
     2. Grab book off the bookshelf and move it around
-    3. Book changes its orientation depending on which screen it's on
     4. Able to drop the book on the table
 */
 
@@ -42,7 +42,7 @@ public class BookMove : MonoBehaviour
     {
         bookshelf = GameObject.Find("Bookshelf");
         shelfScr = bookshelf.GetComponent<ShelfMove>();
-        bookState = BookState.OnShelf;
+        bookState = BookState.OnTable;
 
         bookRadius = 1.0f;
         shelfLayer = 1;
@@ -59,27 +59,31 @@ public class BookMove : MonoBehaviour
         */
 
         if (bookState == BookState.OnShelf) {
+            // Change rotation of the book
+            transform.rotation = Quaternion.Euler(0, 0, 0);
             if (shelfScr.grabbed) {
                 // Move with the shelf
                 //transform.position = whatever the position should be for the book
             }
         }
         else if (bookState == BookState.OnTable) {
+            // Change rotation of the book
+            transform.rotation = Quaternion.Euler(0, 0, 90);
 
         }
         else {
             if (BookInShelfScreen()) {
-                // TODO: Change orientation of the book
-
+                // Change rotation of the book
+                transform.rotation = Quaternion.Euler(0, 0, 0);
                 // Attach book to closest bookshelf if within distance
                 Vector3 closestShelfPos = FindClosestShelf();
-                if (closetShelfPos.x != -100) {
-                    transform.position = closetShelfPos;
+                if (closestShelfPos.x != -100) {
+                    transform.position = closestShelfPos;
                 }
             }
             else {
-                // TODO: change orientation of the book
-                
+                // Change orientation of the book
+                transform.rotation = Quaternion.Euler(0, 0, 90);
             }
         }
 
@@ -94,31 +98,31 @@ public class BookMove : MonoBehaviour
         return false;
     }
 
-    void FindClosestShelf() {
+    Vector3 FindClosestShelf() {
         /* 
         Used while book is held by the player.
-        Returns the closest shelf location to the book if book is certain radius from it.
+        Returns Vector3 of closest shelf location to the book if book is certain radius from it.
         */
 
         // Find all the shelves within certain radius
         Collider2D[] shelves = Physics2D.OverlapCircleAll(transform.position, bookRadius, shelfLayer);
 
         // Find the closest shelf
-        GameObject closestShelf = null;
-        float closestDist = Single.MaxValue;
+        Collider2D closestShelf = null;
+        float closestDist = float.MaxValue;
         Vector3 bookPos = transform.position;
         foreach (Collider2D coll in shelves) {
-            if (coll.GameObject.tag != "bookshelf")  continue;
+            if (coll.gameObject.tag != "bookshelf")  continue;
 
             Vector3 shelfPos = coll.transform.position;
             float thisDist = Vector3.Distance(bookPos, shelfPos);
             if (thisDist < closestDist) {
-                closetShelf = coll;
+                closestShelf = coll;
                 closestDist = thisDist;
             }
         }
 
-        if (closetShelf) {
+        if (closestShelf) {
             bookState = BookState.OnShelf;
             return closestShelf.transform.position; 
         }
