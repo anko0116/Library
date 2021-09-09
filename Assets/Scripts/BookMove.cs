@@ -15,19 +15,25 @@ using UnityEngine;
                 - just a single list but the indices "indicate" the location
         - Hardcode the coordinates for all the spots: only possible when the visuals are FINAL
 
-1. Book stays attached to the bookshelf even when bookshelf moves
-2. Grab book off the bookshelf and move it around
-3. Book changes its orientation depending on which screen it's on
-4. Able to drop the book on the table
+THREE STATES TO CONSIDER:
+    1. ON THE SHELF
+    2. HOLDING THE BOOK (table screen or shelf screen)
+    3. ON THE TABLE
 
+IMPLEMENTATION ORDER LIST:
+    1. Book stays attached to the bookshelf even when bookshelf moves
+    2. Grab book off the bookshelf and move it around
+    3. Book changes its orientation depending on which screen it's on
+    4. Able to drop the book on the table
 */
 
 public class BookMove : MonoBehaviour
 {
+    private enum BookState { OnShelf, OnTable, Holding};
 
     GameObject bookshelf; // Neeeded for the position of the bookshelf
-    bool onShelf; // Whether the book is on shelf or not
     ShelfMove shelfScr; // Needed to check if shelf grabbed
+    BookState bookState;
 
     float bookRadius;
     int shelfLayer;
@@ -35,43 +41,45 @@ public class BookMove : MonoBehaviour
     void Start()
     {
         bookshelf = GameObject.Find("Bookshelf");
-        onShelf = false;
         shelfScr = bookshelf.GetComponent<ShelfMove>();
+        bookState = BookState.OnShelf;
 
         bookRadius = 1.0f;
         shelfLayer = 1;
     }
 
-    void Update()
-    {
-        if (onShelf) {
+    void Update() {
+        // TODO: what to do when an input comes in?
+        /* FIXME: 
+            change this script to be attached to the main camera
+            and takes the mouse input. Don't attach this script to 
+            all the books (bad efficiency).
+
+            Consider just the book that the player is interacting with
+        */
+
+        if (bookState == BookState.OnShelf) {
             if (shelfScr.grabbed) {
-                // Stay with the shelf
+                // Move with the shelf
                 //transform.position = whatever the position should be for the book
             }
+        }
+        else if (bookState == BookState.OnTable) {
 
         }
-        // Off the shelf
         else {
-            // if book is in the bookshelf screen
             if (BookInShelfScreen()) {
-                //transform.position = FindClosestShelf();
                 // TODO: Change orientation of the book
 
-                // Find bookshelf points
-                Collider2D[] shelves = Physics2D.OverlapCircleAll(transform.position, bookRadius, shelfLayer);
-                if (shelves.Length > 1) {
-                    // TODO: put empty gameobjects (with colliders) on the shelves
-                    // TODO: Find the closest shelf
-                    // TODO: magnet the book on to the shelf
-
-
-                    //onShelf = true;
+                // Attach book to closest bookshelf if within distance
+                Vector3 closestShelfPos = FindClosestShelf();
+                if (closetShelfPos.x != -100) {
+                    transform.position = closetShelfPos;
                 }
             }
             else {
                 // TODO: change orientation of the book
-                onShelf = false;
+                
             }
         }
 
@@ -87,8 +95,33 @@ public class BookMove : MonoBehaviour
     }
 
     void FindClosestShelf() {
-        // Returns the closest shelf location to the book if book is close enough
+        /* 
+        Used while book is held by the player.
+        Returns the closest shelf location to the book if book is certain radius from it.
+        */
+
+        // Find all the shelves within certain radius
+        Collider2D[] shelves = Physics2D.OverlapCircleAll(transform.position, bookRadius, shelfLayer);
+
+        // Find the closest shelf
+        GameObject closestShelf = null;
+        float closestDist = Single.MaxValue;
+        Vector3 bookPos = transform.position;
+        foreach (Collider2D coll in shelves) {
+            if (coll.GameObject.tag != "bookshelf")  continue;
+
+            Vector3 shelfPos = coll.transform.position;
+            float thisDist = Vector3.Distance(bookPos, shelfPos);
+            if (thisDist < closestDist) {
+                closetShelf = coll;
+                closestDist = thisDist;
+            }
+        }
+
+        if (closetShelf) {
+            bookState = BookState.OnShelf;
+            return closestShelf.transform.position; 
+        }
+        return new Vector3(-100, -100, -100);
     }
-
-
 }
