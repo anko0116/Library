@@ -21,10 +21,12 @@ THREE STATES TO CONSIDER:
     3. ON THE TABLE
 
 IMPLEMENTATION ORDER LIST:
-    DONE 3. Book changes its orientation depending on which screen it's on while holding
-    4. Able to drop the book on the table
-    1. Book stays attached to the bookshelf even when bookshelf moves
-    2. Grab book off the bookshelf and move it around
+    DONE Book changes its orientation depending on which screen it's on while holding
+    DONE Able to drop the book on the table
+    Done Place the book on the shelf
+    - Magnet shelf
+    - Book stays attached to the bookshelf even when bookshelf moves
+        Put the book under the gameobject of BookShelf
 */
 
 public class MouseLMB : MonoBehaviour {
@@ -112,7 +114,7 @@ public class MouseLMB : MonoBehaviour {
             // Attach book to closest bookshelf if within distance
             Vector3 closestShelfPos = FindClosestShelf();
             if (closestShelfPos.x != -100) {
-                transform.position = closestShelfPos;
+                grabbedBook.transform.position = closestShelfPos;
             }
         }
         else {
@@ -145,7 +147,7 @@ public class MouseLMB : MonoBehaviour {
         float closestDist = float.MaxValue;
         Vector3 bookPos = transform.position;
         foreach (Collider2D coll in shelves) {
-            if (coll.gameObject.tag != "bookshelf")  continue;
+            if (coll.gameObject.tag != "Shelf") continue;
 
             Vector3 shelfPos = coll.transform.position;
             float thisDist = Vector3.Distance(bookPos, shelfPos);
@@ -163,13 +165,19 @@ public class MouseLMB : MonoBehaviour {
 
     bool BookDroppable() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        print(deskBounds.w);
         // Checking if on top of desk
         // FIXME: need finer coordinate points
-        if (mousePos.x > deskBounds.x && mousePos.x < deskBounds.y
-            && mousePos.y > deskBounds.z && mousePos.y < deskBounds.w) {
-            print("hello");
+        if (!BookInShelfScreen() && mousePos.x > deskBounds.x &&
+            mousePos.x < deskBounds.y && mousePos.y > deskBounds.z
+            && mousePos.y < deskBounds.w) {
             return true;
+        }
+        else {
+            Vector3 shelfPos = FindClosestShelf();
+            if (shelfPos.x != -100) {
+                grabbedBook.transform.position = new Vector3(shelfPos.x, shelfPos.y, 0);
+                return true;
+            }
         }
         return false;
     }
