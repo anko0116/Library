@@ -24,9 +24,12 @@ IMPLEMENTATION ORDER LIST:
     DONE Book changes its orientation depending on which screen it's on while holding
     DONE Able to drop the book on the table
     Done Place the book on the shelf
-    - Magnet shelf
-    - Book stays attached to the bookshelf even when bookshelf moves
+    DONE Magnet shelf
+    DONE move bookshelf by holding and dragging LMB
+    DONE Book stays attached to the bookshelf even when bookshelf moves
         Put the book under the gameobject of BookShelf
+    DONE Change order of the books when they're on shelf vs otherwise
+    - Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
 */
 
 public class MouseLMB : MonoBehaviour {
@@ -38,66 +41,79 @@ public class MouseLMB : MonoBehaviour {
 
     bool bookGrabbed;
     GameObject grabbedBook;
+    GameObject shelfObj;
 
     Vector4 deskBounds;
 
     void Start() {
-        bookRadius = 1.0f;
+        bookRadius = 0.7f;
         shelfLayer = 1;
 
         bookGrabbed = false;
         grabbedBook = null;
+        shelfObj = GameObject.Find("Bookshelf");
 
         deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
     }
 
     void Update() {
-        // TODO: check for LMB input
         if (Input.GetMouseButtonDown(0)) {
             // FIXME: may need to use coroutine for linear execution
-            if (bookGrabbed && BookDroppable()) {
+            bool bookOnShelf = false;
+            if (bookGrabbed && ((bookOnShelf = CheckIfShelf()) || CheckIfTable())) {
+                // Lower sortingOrder of the book on shelf to 1
+                // so that book hides behind the left screen when shelf moves
+                if (bookOnShelf) {
+                    grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 1;   
+                }
+                // Disable control of the book movement
                 bookGrabbed = false;
                 grabbedBook = null;
-                return;
+                // TODO: change the sortingOrder of the book otherwise to 15
             }
+            else {
+                // Check for colliders that were selected with LMB
+                RaycastHit2D[] hits = GetRaycastHits();
+                if (hits.Length > 0) {
+                    foreach (RaycastHit2D hit in hits) {
+                        GameObject currObj = hit.collider.gameObject;
 
-            // Get mouse position in 3D coordinates
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // Convert 3D mouse position to 2D
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-            // Find all collider objects that hit on the mouse position
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2D, Vector2.zero);
-
-            // If no objects were detected on mouse position
-            if (hits.Length == 0) {
-                Debug.Log("No collider was hit");
-            }
-            // If objects were detected
-            else if (hits.Length > 0) {
-                foreach (RaycastHit2D hit in hits) {
-                    GameObject currObj = hit.collider.gameObject;
-
-                    if (!bookGrabbed && currObj.tag == "Book") {
-                        bookGrabbed = true;
-                        grabbedBook = currObj;
+                        if (!bookGrabbed && currObj.tag == "Book") {
+                            bookGrabbed = true;
+                            grabbedBook = currObj;
+                            grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                        }
+                        // TODO: click on ">>>" to continue dialogue
+                        // TODO: click on "GIVE" to submit books
                     }
-                    // TODO: click on ">>>" to continue dialogue
-                    // TODO: click on "GIVE" to submit books
                 }
             }
-
-            // TODO: if holding and clicked on shelf
         }
 
         if (bookGrabbed) {
             RotateBook();
-            MoveBook();
-        }
 
-        // TODO: check for holding LMB
+            // Attach book to closest bookshelf if within distance
+            Vector3 closestShelfPos = FindClosestShelf();
+            if (closestShelfPos.x != -100) {
+                grabbedBook.transform.position = closestShelfPos;
+            }
+            else {
+                MoveWithMouse();
+            }
+        }
     }
 
-    void MoveBook() {
+    RaycastHit2D[] GetRaycastHits() {
+        // Get mouse position in 3D coordinates
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // Convert 3D mouse position to 2D
+        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        // Find all collider objects that hit on the mouse position
+        return Physics2D.RaycastAll(mousePos2D, Vector2.zero);
+    }
+
+    void MoveWithMouse() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //float newObjXPos = GetNearestXCoord(mousePos.x);
         //float newObjYPos = GetNearestYCoord(mousePos.y);
@@ -109,16 +125,9 @@ public class MouseLMB : MonoBehaviour {
 
     void RotateBook() {
         if (BookInShelfScreen()) {
-            // Change rotation of the book
             grabbedBook.transform.rotation = Quaternion.Euler(0, 0, 0);
-            // Attach book to closest bookshelf if within distance
-            Vector3 closestShelfPos = FindClosestShelf();
-            if (closestShelfPos.x != -100) {
-                grabbedBook.transform.position = closestShelfPos;
-            }
         }
         else {
-            // Change orientation of the book
             grabbedBook.transform.rotation = Quaternion.Euler(0, 0, 90);
         }
     }
@@ -163,7 +172,7 @@ public class MouseLMB : MonoBehaviour {
         return new Vector3(-100, -100, -100);
     }
 
-    bool BookDroppable() {
+    bool CheckIfTable() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // Checking if on top of desk
         // FIXME: need finer coordinate points
@@ -172,12 +181,15 @@ public class MouseLMB : MonoBehaviour {
             && mousePos.y < deskBounds.w) {
             return true;
         }
-        else {
-            Vector3 shelfPos = FindClosestShelf();
-            if (shelfPos.x != -100) {
-                grabbedBook.transform.position = new Vector3(shelfPos.x, shelfPos.y, 0);
-                return true;
-            }
+        return false;
+    }
+
+    bool CheckIfShelf() {
+        Vector3 shelfPos = FindClosestShelf();
+        if (shelfPos.x != -100) {
+            grabbedBook.transform.position = new Vector3(shelfPos.x, shelfPos.y, 0);
+            grabbedBook.transform.parent = shelfObj.transform;
+            return true;
         }
         return false;
     }

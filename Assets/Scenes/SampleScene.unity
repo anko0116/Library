@@ -1389,7 +1389,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283981715}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1, y: 1.2, z: -23.425274}
+  m_LocalPosition: {x: 1.1, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1522,6 +1522,7 @@ GameObject:
   - component: {fileID: 1406388724}
   - component: {fileID: 1406388727}
   - component: {fileID: 1406388726}
+  - component: {fileID: 1406388728}
   m_Layer: 0
   m_Name: Bookshelf
   m_TagString: Untagged
@@ -1636,6 +1637,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 12, y: 7.03}
   m_EdgeRadius: 0
+--- !u!114 &1406388728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406388723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9a22c12dd3bac4c82ac51b20f0a699, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1475143336
 GameObject:
   m_ObjectHideFlags: 0
@@ -1972,7 +1985,7 @@ GameObject:
   - component: {fileID: 1683609951}
   - component: {fileID: 1683609953}
   m_Layer: 0
-  m_Name: book
+  m_Name: Book
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
