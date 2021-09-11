@@ -69,6 +69,7 @@ public class MouseLMB : MonoBehaviour {
                 // Disable control of the book movement
                 bookGrabbed = false;
                 grabbedBook = null;
+                
                 // TODO: change the sortingOrder of the book otherwise to 15
             }
             else {
