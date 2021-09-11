@@ -28,8 +28,8 @@ IMPLEMENTATION ORDER LIST:
     DONE move bookshelf by holding and dragging LMB
     DONE Book stays attached to the bookshelf even when bookshelf moves
         Put the book under the gameobject of BookShelf
-    DONE Change order of the books when they're on shelf vs otherwise
-    - Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
+    DONE Change sortingOrder of the books when they're on shelf vs otherwise
+    DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
 */
 
 public class MouseLMB : MonoBehaviour {
@@ -59,6 +59,7 @@ public class MouseLMB : MonoBehaviour {
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
             // FIXME: may need to use coroutine for linear execution
+            // Check if book is droppable
             bool bookOnShelf = false;
             if (bookGrabbed && ((bookOnShelf = CheckIfShelf()) || CheckIfTable())) {
                 // Lower sortingOrder of the book on shelf to 1
@@ -69,8 +70,6 @@ public class MouseLMB : MonoBehaviour {
                 // Disable control of the book movement
                 bookGrabbed = false;
                 grabbedBook = null;
-                
-                // TODO: change the sortingOrder of the book otherwise to 15
             }
             else {
                 // Check for colliders that were selected with LMB
