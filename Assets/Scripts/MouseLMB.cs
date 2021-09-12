@@ -30,6 +30,8 @@ IMPLEMENTATION ORDER LIST:
         Put the book under the gameobject of BookShelf
     DONE Change sortingOrder of the books when they're on shelf vs otherwise
     DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
+    - prevent placing books on top of each other (not talking about stacking)
+    - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 
 public class MouseLMB : MonoBehaviour {
@@ -82,6 +84,7 @@ public class MouseLMB : MonoBehaviour {
                             bookGrabbed = true;
                             grabbedBook = currObj;
                             grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                            grabbedBook.transform.parent = null;
                         }
                         // TODO: click on ">>>" to continue dialogue
                         // TODO: click on "GIVE" to submit books
@@ -158,6 +161,7 @@ public class MouseLMB : MonoBehaviour {
         foreach (Collider2D coll in shelves) {
             if (coll.gameObject.tag != "Shelf") continue;
 
+            // TODO: skip shelf spots that already have book on them
             Vector3 shelfPos = coll.transform.position;
             float thisDist = Vector3.Distance(bookPos, shelfPos);
             if (thisDist < closestDist) {
