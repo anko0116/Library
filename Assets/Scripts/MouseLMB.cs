@@ -44,6 +44,7 @@ IMPLEMENTATION ORDER LIST:
     DONE prevent placing books on top of each other (not talking about stacking)
     DONE Move all the ShelfSpot objects into correct positions
     DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
+    DONE Skip magnet when book is under it
     - make space for 12 ShelfSpots
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
@@ -174,7 +175,6 @@ public class MouseLMB : MonoBehaviour {
             if (coll.gameObject.tag != "Shelf") continue;
             if (coll.gameObject.transform.childCount > 0) continue;
 
-            // TODO: skip shelf spots that already have book on them
             Vector3 shelfPos = coll.transform.position;
             float thisDist = Vector3.Distance(mousePos, shelfPos);
             if (thisDist < closestDist) {
