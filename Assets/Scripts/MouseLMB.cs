@@ -30,7 +30,7 @@ IMPLEMENTATION ORDER LIST:
         Put the book under the gameobject of BookShelf
     DONE Change sortingOrder of the books when they're on shelf vs otherwise
     DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
-    - prevent placing books on top of each other (not talking about stacking)
+    DONE prevent placing books on top of each other (not talking about stacking)
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 
@@ -60,7 +60,6 @@ public class MouseLMB : MonoBehaviour {
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            // FIXME: may need to use coroutine for linear execution
             // Check if book is droppable
             bool bookOnShelf = false;
             if (bookGrabbed && ((bookOnShelf = CheckIfShelf()) || CheckIfTable())) {
@@ -95,11 +94,10 @@ public class MouseLMB : MonoBehaviour {
 
         if (bookGrabbed) {
             RotateBook();
-
-            // Attach book to closest bookshelf if within distance
-            Vector3 closestShelfPos = FindClosestShelf();
-            if (closestShelfPos.x != -100) {
-                grabbedBook.transform.position = closestShelfPos;
+            GameObject closestShelf = null;
+            if (BookInShelfScreen() && (closestShelf = FindClosestShelf())) {
+                // Attach book to closest bookshelf if within distance
+                grabbedBook.transform.position = closestShelf.transform.position;
             }
             else {
                 MoveWithMouse();
@@ -137,14 +135,14 @@ public class MouseLMB : MonoBehaviour {
 
     bool BookInShelfScreen() {
         // Returns true if book is inside the shelf screen
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (mousePos.x > 0) {
+        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (grabbedBook.transform.position.x > 0) {
             return true;
         }
         return false;
     }
 
-    Vector3 FindClosestShelf() {
+    GameObject FindClosestShelf() {
         /* 
         Used while book is held by the player.
         Returns Vector3 of closest shelf location to the book if book is certain radius from it.
@@ -160,6 +158,7 @@ public class MouseLMB : MonoBehaviour {
         Vector3 bookPos = transform.position;
         foreach (Collider2D coll in shelves) {
             if (coll.gameObject.tag != "Shelf") continue;
+            if (coll.gameObject.transform.childCount > 0) continue;
 
             // TODO: skip shelf spots that already have book on them
             Vector3 shelfPos = coll.transform.position;
@@ -171,9 +170,9 @@ public class MouseLMB : MonoBehaviour {
         }
 
         if (closestShelf) {
-            return closestShelf.transform.position; 
+            return closestShelf.gameObject; 
         }
-        return new Vector3(-100, -100, -100);
+        return null;
     }
 
     bool CheckIfTable() {
@@ -189,10 +188,11 @@ public class MouseLMB : MonoBehaviour {
     }
 
     bool CheckIfShelf() {
-        Vector3 shelfPos = FindClosestShelf();
-        if (shelfPos.x != -100) {
+        GameObject shelf = FindClosestShelf();
+        if (shelf) {
+            Vector3 shelfPos = shelf.transform.position;
             grabbedBook.transform.position = new Vector3(shelfPos.x, shelfPos.y, 0);
-            grabbedBook.transform.parent = shelfObj.transform;
+            grabbedBook.transform.parent = shelf.transform;
             return true;
         }
         return false;
