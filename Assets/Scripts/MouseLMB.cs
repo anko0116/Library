@@ -31,6 +31,7 @@ IMPLEMENTATION ORDER LIST:
     DONE Change sortingOrder of the books when they're on shelf vs otherwise
     DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
     DONE prevent placing books on top of each other (not talking about stacking)
+    - Move all the ShelfSpot objects into correct positions
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 
