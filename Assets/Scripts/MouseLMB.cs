@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
+--- Sorting order for all objects ---
+Book 15 or 2
+Character 10
+Desk 10
+Library background 5
+Bookshelf 1
+Bookshelf background 0
+
+*/
+
+/*
 - When a book is certain distance from a shelf spot, it gets attached to it
     - The magnet distance must be small so that game can clearly distinguish between adjacent spots
     - Attach empty gameobject to shelf spots
@@ -31,7 +42,9 @@ IMPLEMENTATION ORDER LIST:
     DONE Change sortingOrder of the books when they're on shelf vs otherwise
     DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
     DONE prevent placing books on top of each other (not talking about stacking)
-    - Move all the ShelfSpot objects into correct positions
+    DONE Move all the ShelfSpot objects into correct positions
+    DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
+    - make space for 12 ShelfSpots
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 
@@ -64,10 +77,10 @@ public class MouseLMB : MonoBehaviour {
             // Check if book is droppable
             bool bookOnShelf = false;
             if (bookGrabbed && ((bookOnShelf = CheckIfShelf()) || CheckIfTable())) {
-                // Lower sortingOrder of the book on shelf to 1
+                // Lower sortingOrder of the book on shelf to 2
                 // so that book hides behind the left screen when shelf moves
                 if (bookOnShelf) {
-                    grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 1;   
+                    grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 2;   
                 }
                 // Disable control of the book movement
                 bookGrabbed = false;
@@ -145,8 +158,9 @@ public class MouseLMB : MonoBehaviour {
 
     GameObject FindClosestShelf() {
         /* 
-        Used while book is held by the player.
-        Returns Vector3 of closest shelf location to the book if book is certain radius from it.
+        - Used while book is held by the player
+        - grabbedBook is not empty when this method is called
+        - Returns GameObject of the closest shelf to the book if book is certain radius from it
         */
 
         // Find all the shelves within certain radius
@@ -156,14 +170,13 @@ public class MouseLMB : MonoBehaviour {
         // Find the closest shelf
         Collider2D closestShelf = null;
         float closestDist = float.MaxValue;
-        Vector3 bookPos = transform.position;
         foreach (Collider2D coll in shelves) {
             if (coll.gameObject.tag != "Shelf") continue;
             if (coll.gameObject.transform.childCount > 0) continue;
 
             // TODO: skip shelf spots that already have book on them
             Vector3 shelfPos = coll.transform.position;
-            float thisDist = Vector3.Distance(bookPos, shelfPos);
+            float thisDist = Vector3.Distance(mousePos, shelfPos);
             if (thisDist < closestDist) {
                 closestShelf = coll;
                 closestDist = thisDist;
