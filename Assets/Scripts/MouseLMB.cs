@@ -45,9 +45,20 @@ IMPLEMENTATION ORDER LIST:
     DONE Move all the ShelfSpot objects into correct positions
     DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
     DONE Skip magnet when book is under it
-    - make space for 12 ShelfSpots
+    DONE make space for 12 ShelfSpots
+    - don't let books stack on top of each on the table
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
+
+/* Book shuffling
+1. When mouse is hovering over a spot and books move temporarily
+2. When player clicks on a spot, that means all the books are moved already then...
+Book hovering into a bookshelf spot temporarily
+Move all books left and right and insert the main book into the spot
+when the book is moved off the shelf preview, return all the books to original position
+*/
+
+// https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
 public class MouseLMB : MonoBehaviour {
 
@@ -62,15 +73,20 @@ public class MouseLMB : MonoBehaviour {
 
     Vector4 deskBounds;
 
+    bool shuffledBooks;
+
     void Start() {
         bookRadius = 0.7f;
         shelfLayer = 1;
 
         bookGrabbed = false;
+        shuffledLeft = true;
         grabbedBook = null;
         shelfObj = GameObject.Find("Bookshelf");
 
         deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
+
+        shuffledBooks = false;
     }
 
     void Update() {
@@ -78,8 +94,6 @@ public class MouseLMB : MonoBehaviour {
             // Check if book is droppable
             bool bookOnShelf = false;
             if (bookGrabbed && ((bookOnShelf = CheckIfShelf()) || CheckIfTable())) {
-                // Lower sortingOrder of the book on shelf to 2
-                // so that book hides behind the left screen when shelf moves
                 if (bookOnShelf) {
                     grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 2;   
                 }
@@ -111,7 +125,11 @@ public class MouseLMB : MonoBehaviour {
             RotateBook();
             GameObject closestShelf = null;
             if (BookInShelfScreen() && (closestShelf = FindClosestShelf())) {
-                // Attach book to closest bookshelf if within distance
+                // Preview book to closest bookshelf if within distance
+                if (ShuffleBooks()) {
+                    shuffledBooks = true;
+                }
+
                 grabbedBook.transform.position = closestShelf.transform.position;
             }
             else {
@@ -173,7 +191,7 @@ public class MouseLMB : MonoBehaviour {
         float closestDist = float.MaxValue;
         foreach (Collider2D coll in shelves) {
             if (coll.gameObject.tag != "Shelf") continue;
-            if (coll.gameObject.transform.childCount > 0) continue;
+            //if (coll.gameObject.transform.childCount > 0) continue;
 
             Vector3 shelfPos = coll.transform.position;
             float thisDist = Vector3.Distance(mousePos, shelfPos);
@@ -202,6 +220,7 @@ public class MouseLMB : MonoBehaviour {
     }
 
     bool CheckIfShelf() {
+        // Used when placing the book on the shelf
         GameObject shelf = FindClosestShelf();
         if (shelf) {
             Vector3 shelfPos = shelf.transform.position;
@@ -210,5 +229,21 @@ public class MouseLMB : MonoBehaviour {
             return true;
         }
         return false;
+    }
+
+    bool ShuffleBooks(GameObject shelfSpot) {
+        // Moves books on the shelf left or right to make space for new book
+        // if the shelf is not full.
+        // Modifies shuffleLeft bool to indicate which way the books got moved
+
+        if (ShelfNotFull(shelfSpot.transform.parent)) {
+
+        }
+
+        return false;
+    }
+
+    bool ShelfNotFull(GameObject shelf) {
+        return true;
     }
 }
