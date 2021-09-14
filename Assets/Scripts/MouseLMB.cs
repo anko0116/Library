@@ -54,10 +54,16 @@ IMPLEMENTATION ORDER LIST:
 1. When mouse is hovering over a spot and books move temporarily
 2. When player clicks on a spot, that means all the books are moved already then...
     Test whether this is true
+    TRUE!!!
 
 Book hovering into a bookshelf spot temporarily
 Move all books left and right and insert the main book into the spot
 when the book is moved off the shelf preview, return all the books to original position
+
+Scenario: 
+    - Books shuffled temporarily (player is still holding the book)
+    - Player moves cursor to the left -> how do we get here from the previous state? 
+        if cursor is moved out of the current shuffle spot
 */
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
@@ -138,10 +144,16 @@ public class MouseLMB : MonoBehaviour {
 
                 int shelfBookCount = shelfSpotObj.transform.childCount;
                 if (shelfBookCount > 0) {
-                    ShuffleBooks(shelfSpotObj);
-                    shuffledBooks = true;
+                    bool shiftedBooks = ShiftBooks(shelfSpotObj);
+                    // FIXME: have to check for book shiftability while putting the books on the shelf
+                    // precompute instead of checking on the spot
+                    if (shiftedBooks) {
+                        grabbedBook.transform.position = closestShelf.transform.position;
+                    }
+                    else {
+                        return;
+                    }
                 }
-
                 grabbedBook.transform.position = closestShelf.transform.position;
             }
             else {
@@ -242,7 +254,7 @@ public class MouseLMB : MonoBehaviour {
         return false;
     }
 
-    void ShuffleBooks(GameObject shelfSpot) {
+    bool ShiftBooks(GameObject shelfSpot) {
         // Moves books on the shelf left or right to make space for new book
         // if the shelf is not full.
         // Modifies shuffleLeft bool to indicate which way the books got moved.
@@ -262,16 +274,21 @@ public class MouseLMB : MonoBehaviour {
                 }
                 GameObject rightBook = GetShelfSpotBook(shelfSpots[i+1]);
                 rightBook.transform.parent = shelfSpots[i].transform;
+                rightBook.transform.position = shelfSpots[i].transform.position; 
                 if (foundEmpty) {
-                    return;
+                    return true;
                 }
             }
-            return;
+            return true;
         }
+        /*
         if (!ShelfFullDirection(ref shelfSpots, !checkLeft, spotIndex)) {
-            return;
-        }
+            // TODO: implement
+            return true;
+        }*/
+
         // Hit here if shelf is full.
+        return false;
     }
 
     bool ShelfFullDirection(ref List<GameObject> shelfSpots, bool checkLeft, int spotIndex) {
