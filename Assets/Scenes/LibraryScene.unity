@@ -456,7 +456,7 @@ GameObject:
   - component: {fileID: 241287230}
   - component: {fileID: 241287229}
   m_Layer: 0
-  m_Name: bookcaseshelf
+  m_Name: Shelf1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -618,7 +618,7 @@ GameObject:
   - component: {fileID: 278285987}
   - component: {fileID: 278285988}
   m_Layer: 0
-  m_Name: ShelfSpot (2)
+  m_Name: ShelfSpot2
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -632,10 +632,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278285986}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.4, y: 5.6, z: 0}
+  m_LocalPosition: {x: -5.4, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &278285988
@@ -1479,7 +1479,7 @@ GameObject:
   m_Component:
   - component: {fileID: 745014805}
   m_Layer: 0
-  m_Name: Row1
+  m_Name: Column1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1676,7 +1676,7 @@ GameObject:
   - component: {fileID: 921347799}
   - component: {fileID: 921347800}
   m_Layer: 0
-  m_Name: ShelfSpot (8)
+  m_Name: ShelfSpot8
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1690,10 +1690,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921347798}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3, y: 5.6, z: 0}
+  m_LocalPosition: {x: 3, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &921347800
@@ -1922,7 +1922,7 @@ GameObject:
   - component: {fileID: 1232454647}
   - component: {fileID: 1232454648}
   m_Layer: 0
-  m_Name: ShelfSpot (9)
+  m_Name: ShelfSpot9
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1936,10 +1936,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232454646}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.4, y: 5.6, z: 0}
+  m_LocalPosition: {x: 4.4000006, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1232454648
@@ -1979,7 +1979,7 @@ GameObject:
   - component: {fileID: 1246646718}
   - component: {fileID: 1246646717}
   m_Layer: 0
-  m_Name: bookcaseshelf (1)
+  m_Name: Shelf2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2045,7 +2045,19 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.6783333, y: 2.4870229, z: 12.265726}
   m_LocalScale: {x: 0.45, y: 0.45, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1283981717}
+  - {fileID: 2096838063}
+  - {fileID: 278285987}
+  - {fileID: 1795604516}
+  - {fileID: 1637960486}
+  - {fileID: 2093342213}
+  - {fileID: 1929463046}
+  - {fileID: 1835814016}
+  - {fileID: 921347799}
+  - {fileID: 1232454647}
+  - {fileID: 1721092348}
+  - {fileID: 1519995424}
   m_Father: {fileID: 745014805}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2060,7 +2072,7 @@ GameObject:
   - component: {fileID: 1283981717}
   - component: {fileID: 1283981716}
   m_Layer: 0
-  m_Name: ShelfSpot
+  m_Name: ShelfSpot0
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2100,10 +2112,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283981715}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.3, y: 5.6, z: 0}
+  m_LocalPosition: {x: -7.300002, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1321450001
@@ -2151,7 +2163,7 @@ GameObject:
   - component: {fileID: 1379029947}
   - component: {fileID: 1379029946}
   m_Layer: 0
-  m_Name: bookcaseshelf (2)
+  m_Name: Shelf3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2217,19 +2229,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.6783333, y: -0.012977123, z: 12.265726}
   m_LocalScale: {x: 0.45, y: 0.45, z: 1}
-  m_Children:
-  - {fileID: 1283981717}
-  - {fileID: 2096838063}
-  - {fileID: 278285987}
-  - {fileID: 1795604516}
-  - {fileID: 1637960486}
-  - {fileID: 2093342213}
-  - {fileID: 1929463046}
-  - {fileID: 1835814016}
-  - {fileID: 921347799}
-  - {fileID: 1232454647}
-  - {fileID: 1721092348}
-  - {fileID: 1519995424}
+  m_Children: []
   m_Father: {fileID: 745014805}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2653,7 +2653,7 @@ GameObject:
   - component: {fileID: 1519995424}
   - component: {fileID: 1519995425}
   m_Layer: 0
-  m_Name: ShelfSpot (11)
+  m_Name: ShelfSpot11
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2667,10 +2667,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519995423}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.3, y: 5.6, z: 0}
+  m_LocalPosition: {x: 7.2999988, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1519995425
@@ -2899,7 +2899,7 @@ GameObject:
   - component: {fileID: 1637910653}
   - component: {fileID: 1637910652}
   m_Layer: 0
-  m_Name: bookcaseshelf (3)
+  m_Name: Shelf4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2980,7 +2980,7 @@ GameObject:
   - component: {fileID: 1637960486}
   - component: {fileID: 1637960487}
   m_Layer: 0
-  m_Name: ShelfSpot (4)
+  m_Name: ShelfSpot4
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2994,10 +2994,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637960485}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.6, y: 5.6, z: 0}
+  m_LocalPosition: {x: -2.5999992, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1637960487
@@ -3253,7 +3253,7 @@ GameObject:
   - component: {fileID: 1721092348}
   - component: {fileID: 1721092349}
   m_Layer: 0
-  m_Name: ShelfSpot (10)
+  m_Name: ShelfSpot10
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3267,10 +3267,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721092347}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.8, y: 5.6, z: 0}
+  m_LocalPosition: {x: 5.8000016, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1721092349
@@ -3310,7 +3310,7 @@ GameObject:
   - component: {fileID: 1795604516}
   - component: {fileID: 1795604517}
   m_Layer: 0
-  m_Name: ShelfSpot (3)
+  m_Name: ShelfSpot3
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3324,10 +3324,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795604515}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: 5.6, z: 0}
+  m_LocalPosition: {x: -4, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1795604517
@@ -3556,7 +3556,7 @@ GameObject:
   - component: {fileID: 1835814016}
   - component: {fileID: 1835814017}
   m_Layer: 0
-  m_Name: ShelfSpot (7)
+  m_Name: ShelfSpot7
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3570,10 +3570,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835814015}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.6, y: 5.6, z: 0}
+  m_LocalPosition: {x: 1.5999986, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1835814017
@@ -3613,7 +3613,7 @@ GameObject:
   - component: {fileID: 1929463046}
   - component: {fileID: 1929463047}
   m_Layer: 0
-  m_Name: ShelfSpot (6)
+  m_Name: ShelfSpot6
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3627,10 +3627,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1929463045}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.2, y: 5.6, z: 0}
+  m_LocalPosition: {x: 0.2000014, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1929463047
@@ -3886,7 +3886,7 @@ GameObject:
   - component: {fileID: 2093342213}
   - component: {fileID: 2093342214}
   m_Layer: 0
-  m_Name: ShelfSpot (5)
+  m_Name: ShelfSpot5
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3900,10 +3900,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2093342212}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.2, y: 5.6, z: 0}
+  m_LocalPosition: {x: -1.2000021, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2093342214
@@ -3943,7 +3943,7 @@ GameObject:
   - component: {fileID: 2096838063}
   - component: {fileID: 2096838064}
   m_Layer: 0
-  m_Name: ShelfSpot (1)
+  m_Name: ShelfSpot1
   m_TagString: Shelf
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3957,10 +3957,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096838062}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6, y: 5.6, z: 0}
+  m_LocalPosition: {x: -6, y: 0.044444405, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 1}
   m_Children: []
-  m_Father: {fileID: 1379029947}
+  m_Father: {fileID: 1246646718}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2096838064
