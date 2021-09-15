@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,6 +64,9 @@ Scenario:
     - Books shuffled temporarily (player is still holding the book)
     - Player moves cursor to the left -> how do we get here from the previous state? 
         if cursor is moved out of the current shuffle spot
+
+BookScript.cs
+
 */
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
@@ -145,8 +148,6 @@ public class MouseLMB : MonoBehaviour {
                 int shelfBookCount = shelfSpotObj.transform.childCount;
                 if (shelfBookCount > 0) {
                     bool shiftedBooks = ShiftBooks(shelfSpotObj);
-                    // FIXME: have to check for book shiftability while putting the books on the shelf
-                    // precompute instead of checking on the spot
                     if (shiftedBooks) {
                         grabbedBook.transform.position = closestShelf.transform.position;
                     }
