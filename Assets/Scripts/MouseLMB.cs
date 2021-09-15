@@ -51,19 +51,8 @@ IMPLEMENTATION ORDER LIST:
 */
 
 /* Book shuffling
-1. When mouse is hovering over a spot and books move temporarily
-2. When player clicks on a spot, that means all the books are moved already then...
-    Test whether this is true
-    TRUE!!!
-
-Book hovering into a bookshelf spot temporarily
-Move all books left and right and insert the main book into the spot
-when the book is moved off the shelf preview, return all the books to original position
-
-Scenario: 
-    - Books shuffled temporarily (player is still holding the book)
-    - Player moves cursor to the left -> how do we get here from the previous state? 
-        if cursor is moved out of the current shuffle spot
+1. While book is on the shelf, move cursor left or right to shuffle book
+2. if i take the book out, return all the books to original position
 */
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
@@ -144,18 +133,27 @@ public class MouseLMB : MonoBehaviour {
 
                 int shelfBookCount = shelfSpotObj.transform.childCount;
                 if (shelfBookCount > 0) {
-                    bool shiftedBooks = ShiftBooks(shelfSpotObj);
+                    int spotIndex = shelfSpotObj.name[shelfSpotObj.name.Length-1] - '0';
+                    List<GameObject> shelfSpots = new List<GameObject>();
+                    foreach (Transform spot in
+                        shelfSpotObj.transform.parent.gameObject.transform) {
+                        shelfSpots.Add(spot.gameObject);
+                    }
+                    bool shiftedBooks = ShiftBooks(spotIndex, ref shelfSpots);
                     // FIXME: have to check for book shiftability while putting the books on the shelf
                     // precompute instead of checking on the spot
                     if (shiftedBooks) {
+                        // Maintain the curren ordering
+
                         grabbedBook.transform.position = closestShelf.transform.position;
                     }
                     else {
                         MoveWithMouse();
-                        return;
                     }
                 }
-                grabbedBook.transform.position = closestShelf.transform.position;
+                else {
+                    grabbedBook.transform.position = closestShelf.transform.position;
+                }
             }
             else {
                 bookOnShelf = false;
@@ -255,18 +253,12 @@ public class MouseLMB : MonoBehaviour {
         return false;
     }
 
-    bool ShiftBooks(GameObject shelfSpot) {
+    bool ShiftBooks(int spotIndex, ref List<GameObject> shelfSpots) {
         // Moves books on the shelf left or right to make space for new book
         // if the shelf is not full.
         // Modifies shuffleLeft bool to indicate which way the books got moved.
 
         bool checkLeft = true;
-        int spotIndex = shelfSpot.name[shelfSpot.name.Length-1] - '0';
-        List<GameObject> shelfSpots = new List<GameObject>();
-        foreach (Transform spot in shelfSpot.transform.parent.gameObject.transform) {
-            shelfSpots.Add(spot.gameObject);
-        }
-
         if (!ShelfFullDirection(ref shelfSpots, checkLeft, spotIndex)) {
             for (int i = spotIndex-1; i > -1; --i) {
                 bool foundEmpty = false;
