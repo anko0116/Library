@@ -151,6 +151,7 @@ public class MouseLMB : MonoBehaviour {
                         grabbedBook.transform.position = closestShelf.transform.position;
                     }
                     else {
+                        MoveWithMouse();
                         return;
                     }
                 }
