@@ -45,7 +45,7 @@ IMPLEMENTATION ORDER LIST:
     DONE Move all the ShelfSpot objects into correct positions
     DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
     DONE Skip magnet when book is under it
-    DONE make space for 12 ShelfSpots
+    DONE make space for 12 rowSpots
     - don't let books stack on top of each on the table
     - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
@@ -53,6 +53,9 @@ IMPLEMENTATION ORDER LIST:
 /* Book shuffling
 1. While book is on the shelf, move cursor left or right to shuffle book
 2. if i take the book out, return all the books to original position
+
+*** Just make it so I'm swapping books?
+Bug - Books don't shuffle when there's no space left on the left
 */
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
@@ -65,34 +68,37 @@ public class MouseLMB : MonoBehaviour {
     float bookRadius;
     int shelfLayer;
     bool bookOnShelf;
-    GameObject shelfSpotObj;
-    GameObject shelfRowObj;
-    List<GameObject> shelfSpots;
+    GameObject shelfSpot;
+    GameObject prevShelfSpot;
+    GameObject shelfRow;
+    List<GameObject> rowSpots;
+    List<GameObject> rowBooks;
 
     bool bookGrabbed;
     GameObject grabbedBook;
-    GameObject shelfObj;
+    //GameObject shelf;
 
     Vector4 deskBounds;
 
-    bool shuffledBooks;
-    bool shuffledLeft;
+    bool shiftedBooks;
+    bool shiftedLeft;
 
     void Start() {
         maxBookCount = 12;
         bookRadius = 0.7f;
         shelfLayer = 1;
         bookOnShelf = false;
-        shelfSpotObj = null;
+        shelfSpot = null;
+        shelfRow = null;
 
         bookGrabbed = false;
         grabbedBook = null;
-        shelfObj = GameObject.Find("Bookshelf");
+        //shelf = GameObject.Find("Bookshelf");
 
         deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
 
-        shuffledBooks = false;
-        shuffledLeft = true;
+        shiftedBooks = false;
+        shiftedLeft = true;
     }
 
     void Update() {
@@ -101,7 +107,10 @@ public class MouseLMB : MonoBehaviour {
             if (bookGrabbed && (bookOnShelf || CheckIfTable())) {
                 if (bookOnShelf) {
                     grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 2;   
-                    grabbedBook.transform.parent = shelfSpotObj.transform;
+                    grabbedBook.transform.parent = shelfSpot.transform;
+                    shelfSpot = null;
+                    rowBooks = null;
+                    shiftedBooks = false;
                 }
                 // Disable control of the book movement
                 bookGrabbed = false;
@@ -133,26 +142,33 @@ public class MouseLMB : MonoBehaviour {
             if (BookInShelfScreen() && (closestShelf = FindClosestShelf())) {
                 // Preview book to closest bookshelf if within distance
                 bookOnShelf = true;
-                shelfSpotObj = closestShelf;
+                shelfSpot = closestShelf;
+                shelfRow = shelfSpot.transform.parent.gameObject;
 
-                bool shelfBookCheck = closestShelf.transform.childCount != 0;
-                if (shelfBookCheck) {
+                bool spotHasBook = closestShelf.transform.childCount != 0;
+                if (spotHasBook) {
+                    if (shiftedBooks && !GameObject.ReferenceEquals(shelfSpot, prevShelfSpot)) {
+                        ReturnBooksToSpot();
+                        rowBooks = null;
+                        shiftedBooks = false;
+                    }
+
                     // Data for shifting books
                     int spotIndex = closestShelf.name[closestShelf.name.Length-1] - '0';
-                    shelfSpots = new List<GameObject>(new GameObject[maxBookCount]);
-                    int i = 0;
-                    foreach (Transform spot in
-                        closestShelf.transform.parent.gameObject.transform) {
-                        shelfSpots[i++] = spot.gameObject;
-                    }
-                    bool shiftedBooks = ShiftBooks(spotIndex, shelfSpots);
-                    // TODO: save the placement of books before the books shifted
+                    rowSpots = GetShelfSpots();
+                    rowBooks = GetShelfBooks(shelfRow);
+                    shiftedBooks = ShiftBooks(spotIndex);
+
                     if (shiftedBooks) {
-                        // Maintain the curren ordering
                         grabbedBook.transform.position = closestShelf.transform.position;
+                        // FIXME: this could cause bugs
+                        prevShelfSpot = shelfSpot;
+                        shelfSpot = null;
+                        shiftedBooks = true;
                     }
                     else {
                         MoveWithMouse();
+                        bookOnShelf = false;
                     }
                 }
                 else {
@@ -160,6 +176,11 @@ public class MouseLMB : MonoBehaviour {
                 }
             }
             else {
+                if (shiftedBooks) {
+                    ReturnBooksToSpot();
+                    rowBooks = null;
+                    shiftedBooks = false;
+                }
                 bookOnShelf = false;
                 MoveWithMouse();
             }
@@ -249,7 +270,7 @@ public class MouseLMB : MonoBehaviour {
 
     bool CheckIfShelf() {
         // Used when placing the book on the shelf
-        if (bookOnShelf && shelfSpotObj) {
+        if (bookOnShelf && shelfSpot) {
             //Vector3 shelfPos = shelf.transform.position;
             //grabbedBook.transform.position = new Vector3(shelfPos.x, shelfPos.y, 0);
             return true;
@@ -257,21 +278,24 @@ public class MouseLMB : MonoBehaviour {
         return false;
     }
 
-    bool ShiftBooks(int spotIndex, List<GameObject> shelfSpots) {
+    bool ShiftBooks(int spotIndex) {
         // Moves books on the shelf left or right to make space for new book
         // if the shelf is not full.
         // Modifies shuffleLeft bool to indicate which way the books got moved.
 
         bool checkLeft = true;
-        if (!ShelfFullDirection(ref shelfSpots, checkLeft, spotIndex)) {
+        if (!ShelfFullDirection(checkLeft, spotIndex)) {
             for (int i = spotIndex-1; i > -1; --i) {
                 bool foundEmpty = false;
-                if (shelfSpots[i].transform.childCount == 0) {
+                if (rowSpots[i].transform.childCount == 0) {
                     foundEmpty = true;
                 }
-                GameObject rightBook = GetShelfSpotBook(shelfSpots[i+1]);
-                rightBook.transform.parent = shelfSpots[i].transform;
-                rightBook.transform.position = shelfSpots[i].transform.position; 
+                GameObject rightBook = GetShelfSpotBook(rowSpots[i+1]);
+                if (!rightBook) {
+                    return true;
+                }
+                rightBook.transform.parent = rowSpots[i].transform;
+                rightBook.transform.position = rowSpots[i].transform.position; 
                 if (foundEmpty) {
                     return true;
                 }
@@ -279,7 +303,7 @@ public class MouseLMB : MonoBehaviour {
             return true;
         }
         /*
-        if (!ShelfFullDirection(ref shelfSpots, !checkLeft, spotIndex)) {
+        if (!ShelfFullDirection(ref rowSpots, !checkLeft, spotIndex)) {
             // TODO: implement
             return true;
         }*/
@@ -288,9 +312,11 @@ public class MouseLMB : MonoBehaviour {
         return false;
     }
 
-    bool ShelfFullDirection(ref List<GameObject> shelfSpots, bool checkLeft, int spotIndex) {
-        for (int i = 0; i < shelfSpots.Count; ++i) {
-            int spotChildCnt = shelfSpots[i].transform.childCount;
+    bool ShelfFullDirection(bool checkLeft, int spotIndex) {
+        // FIXME: get rid of this
+        return false;
+        for (int i = 0; i < rowSpots.Count; ++i) {
+            int spotChildCnt = rowSpots[i].transform.childCount;
             if (checkLeft && i < spotIndex && spotChildCnt == 0) {
                 return false;
             }
@@ -308,4 +334,36 @@ public class MouseLMB : MonoBehaviour {
         return null;
     }
 
+    List<GameObject> GetShelfSpots() {
+        List<GameObject> shelfBooks = new List<GameObject>(new GameObject[maxBookCount]);
+        int i = 0;
+        foreach (Transform spot in shelfRow.transform) {
+            shelfBooks[i++] = spot.gameObject;
+        }
+        return shelfBooks;
+    }
+
+    List<GameObject> GetShelfBooks(GameObject shelfRow) {
+        List<GameObject> books = new List<GameObject>();
+        foreach (Transform spot in shelfRow.transform) {
+            if (spot.transform.childCount == 0) {
+                books.Add(null);
+            }
+            else {
+                foreach (Transform book in spot) {
+                    books.Add(book.gameObject);
+                }
+            }
+        }
+        return books;
+    }
+
+    void ReturnBooksToSpot() {
+        for (int i = 0; i < maxBookCount; ++i) {
+            if (rowBooks[i]) {
+                rowBooks[i].transform.parent = rowSpots[i].transform;
+                rowBooks[i].transform.position = rowSpots[i].transform.position;
+            }
+        }
+    }
 }
