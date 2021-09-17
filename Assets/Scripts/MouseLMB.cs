@@ -89,6 +89,7 @@ public class MouseLMB : MonoBehaviour {
         shelfLayer = 1;
         bookOnShelf = false;
         shelfSpot = null;
+        prevShelfSpot = null;
         shelfRow = null;
 
         bookGrabbed = false;
@@ -136,6 +137,7 @@ public class MouseLMB : MonoBehaviour {
             }
         }
 
+        // All book-holding interactions
         if (bookGrabbed) {
             RotateBook();
             GameObject closestShelf = null;
@@ -154,7 +156,7 @@ public class MouseLMB : MonoBehaviour {
                     }
 
                     // Data for shifting books
-                    int spotIndex = closestShelf.name[closestShelf.name.Length-1] - '0';
+                    int spotIndex = GetShelfSpotIndex(closestShelf.name);
                     rowSpots = GetShelfSpots();
                     rowBooks = GetShelfBooks(shelfRow);
                     shiftedBooks = ShiftBooks(spotIndex);
@@ -283,6 +285,7 @@ public class MouseLMB : MonoBehaviour {
         // if the shelf is not full.
         // Modifies shuffleLeft bool to indicate which way the books got moved.
 
+        // FIXME: Code refactor please...
         bool checkLeft = true;
         if (!ShelfFullDirection(checkLeft, spotIndex)) {
             for (int i = spotIndex-1; i > -1; --i) {
@@ -302,20 +305,33 @@ public class MouseLMB : MonoBehaviour {
             }
             return true;
         }
-        /*
-        if (!ShelfFullDirection(ref rowSpots, !checkLeft, spotIndex)) {
-            // TODO: implement
+        
+        
+        if (!ShelfFullDirection(!checkLeft, spotIndex)) {
+            for (int i = spotIndex+1; i < maxBookCount; ++i) {
+                bool foundEmpty = false;
+                if (rowSpots[i].transform.childCount == 0) {
+                    foundEmpty = true;
+                }
+                GameObject leftBook = GetShelfSpotBook(rowSpots[i-1]);
+                if (!leftBook) {
+                    return true;
+                }
+                leftBook.transform.parent = rowSpots[i].transform;
+                leftBook.transform.position = rowSpots[i].transform.position;
+                if (foundEmpty) {
+                    return true;
+                }
+            }           
             return true;
-        }*/
+        }
 
         // Hit here if shelf is full.
         return false;
     }
 
     bool ShelfFullDirection(bool checkLeft, int spotIndex) {
-        // FIXME: get rid of this
-        return false;
-        for (int i = 0; i < rowSpots.Count; ++i) {
+        for (int i = 0; i < maxBookCount; ++i) {
             int spotChildCnt = rowSpots[i].transform.childCount;
             if (checkLeft && i < spotIndex && spotChildCnt == 0) {
                 return false;
@@ -365,5 +381,14 @@ public class MouseLMB : MonoBehaviour {
                 rowBooks[i].transform.position = rowSpots[i].transform.position;
             }
         }
+    }
+
+    int GetShelfSpotIndex(string objName) {
+        char char1 = objName[objName.Length-2];
+        char char2 = objName[objName.Length-1];
+        if (char1 - '0' >= 0 && char1 - '0' <= 9) {
+            return (char1 - '0') * 10 + char2 - '0';
+        }
+        return char2 - '0';
     }
 }

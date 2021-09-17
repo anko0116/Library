@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 79220394}
   - component: {fileID: 79220393}
   m_Layer: 0
-  m_Name: chrome_EJCza4FsFy
+  m_Name: BookFairy
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
