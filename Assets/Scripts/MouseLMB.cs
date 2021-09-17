@@ -46,17 +46,11 @@ IMPLEMENTATION ORDER LIST:
     DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
     DONE Skip magnet when book is under it
     DONE make space for 12 rowSpots
+    DONE? shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
+
     - don't let books stack on top of each on the table
-    - shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 
-/* Book shuffling
-1. While book is on the shelf, move cursor left or right to shuffle book
-2. if i take the book out, return all the books to original position
-
-*** Just make it so I'm swapping books?
-Bug - Books don't shuffle when there's no space left on the left
-*/
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
