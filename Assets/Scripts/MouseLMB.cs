@@ -64,24 +64,24 @@ public class MouseLMB : MonoBehaviour {
 
     private enum BookState { OnShelf, OnTable, Holding};
 
+    // Constant values
     int maxBookCount;
     float bookRadius;
     int shelfLayer;
+    Vector4 deskBounds;
+
+    // State change variables
     bool bookOnShelf;
+    bool shiftedBooks;
+    bool bookGrabbed;
+
+    // Used to transition between states
     GameObject shelfSpot;
     GameObject prevShelfSpot;
     GameObject shelfRow;
+    GameObject grabbedBook;
     List<GameObject> rowSpots;
     List<GameObject> rowBooks;
-
-    bool bookGrabbed;
-    GameObject grabbedBook;
-    //GameObject shelf;
-
-    Vector4 deskBounds;
-
-    bool shiftedBooks;
-    bool shiftedLeft;
 
     void Start() {
         maxBookCount = 12;
@@ -184,7 +184,14 @@ public class MouseLMB : MonoBehaviour {
                     shiftedBooks = false;
                 }
                 bookOnShelf = false;
-                MoveWithMouse();
+
+                GameObject stackBook = null;
+                if (stackBook = CheckIfBook()) {
+                    grabbedBook.transform.position = stackBook.transform.position;
+                } 
+                else {
+                    MoveWithMouse();
+                }
             }
         }
     }
@@ -278,6 +285,34 @@ public class MouseLMB : MonoBehaviour {
             return true;
         }
         return false;
+    }
+
+    GameObject CheckIfBook() {
+        // TODO: refactor this code with FindClosestShelf since they both do same thing
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        int bookLayer = 15;
+        float bookRadius = 0.3f;
+        Collider2D[] books = Physics2D.OverlapCircleAll(mousePos, bookRadius, bookLayer);
+
+        // Find the closest book
+        Collider2D closestBook = null;
+        float closestDist = float.MaxValue;
+        foreach (Collider2D coll in books) {
+            if (coll.gameObject.tag != "Book") continue;
+
+            Vector3 bookPos = coll.transform.position;
+            float thisDist = Vector3.Distance(mousePos, bookPos);
+            if (thisDist < closestDist) {
+                closestBook = coll;
+                closestDist = thisDist;
+            }
+        }
+
+        if (closestBook) {
+            return closestBook.gameObject; 
+        }
+        return null;
+
     }
 
     bool ShiftBooks(int spotIndex) {
