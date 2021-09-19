@@ -133,12 +133,12 @@ GameObject:
   - component: {fileID: 47341121}
   - component: {fileID: 47341123}
   m_Layer: 0
-  m_Name: chrome_E79qX5aJb9
+  m_Name: BoozeBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &47341121
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -241,12 +241,12 @@ GameObject:
   - component: {fileID: 79220394}
   - component: {fileID: 79220393}
   m_Layer: 0
-  m_Name: BookFairy
+  m_Name: FairyBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &79220393
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -349,12 +349,12 @@ GameObject:
   - component: {fileID: 219569613}
   - component: {fileID: 219569612}
   m_Layer: 0
-  m_Name: chrome_cBua72GELH
+  m_Name: PenguinBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &219569612
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1292,12 +1292,12 @@ GameObject:
   - component: {fileID: 666047736}
   - component: {fileID: 666047735}
   m_Layer: 0
-  m_Name: chrome_VJZTvi3UYh
+  m_Name: BabyPenguinBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &666047735
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1734,12 +1734,12 @@ GameObject:
   - component: {fileID: 1055993093}
   - component: {fileID: 1055993095}
   m_Layer: 0
-  m_Name: chrome_1d740d54zN
+  m_Name: WhaleBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1055993093
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2465,12 +2465,12 @@ GameObject:
   - component: {fileID: 1488560728}
   - component: {fileID: 1488560727}
   m_Layer: 0
-  m_Name: chrome_L2pIn9she0
+  m_Name: RumBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1488560727
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2711,12 +2711,12 @@ GameObject:
   - component: {fileID: 1532842507}
   - component: {fileID: 1532842506}
   m_Layer: 0
-  m_Name: chrome_dl2dHNF13n
+  m_Name: CatBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1532842506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3038,12 +3038,12 @@ GameObject:
   - component: {fileID: 1680059596}
   - component: {fileID: 1680059595}
   m_Layer: 0
-  m_Name: chrome_ucucB04JcN
+  m_Name: WaveBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1680059595
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3368,12 +3368,12 @@ GameObject:
   - component: {fileID: 1797038123}
   - component: {fileID: 1797038125}
   m_Layer: 0
-  m_Name: chrome_8jNHQschqz
+  m_Name: CrabBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1797038123
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3671,12 +3671,12 @@ GameObject:
   - component: {fileID: 2010935548}
   - component: {fileID: 2010935550}
   m_Layer: 0
-  m_Name: chrome_lyKeGdogub
+  m_Name: ManBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &2010935548
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3779,12 +3779,12 @@ GameObject:
   - component: {fileID: 2082201560}
   - component: {fileID: 2082201559}
   m_Layer: 0
-  m_Name: chrome_n1GrivTW1L
+  m_Name: DolphinBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &2082201559
 BoxCollider2D:
   m_ObjectHideFlags: 0

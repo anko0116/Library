@@ -81,19 +81,17 @@ public class MouseLMB : MonoBehaviour {
         maxBookCount = 12;
         bookRadius = 0.7f;
         shelfLayer = 1;
+        deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
+
         bookOnShelf = false;
+        shiftedBooks = false;
+        bookGrabbed = false;
+        
         shelfSpot = null;
         prevShelfSpot = null;
         shelfRow = null;
-
-        bookGrabbed = false;
         grabbedBook = null;
         //shelf = GameObject.Find("Bookshelf");
-
-        deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
-
-        shiftedBooks = false;
-        shiftedLeft = true;
     }
 
     void Update() {
