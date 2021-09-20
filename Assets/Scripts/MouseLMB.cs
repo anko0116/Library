@@ -75,6 +75,7 @@ public class MouseLMB : MonoBehaviour {
     GameObject prevShelfSpot;
     GameObject shelfRow;
     GameObject grabbedBook;
+    GameObject stackBook;
     List<GameObject> rowSpots;
     List<GameObject> rowBooks;
 
@@ -93,19 +94,24 @@ public class MouseLMB : MonoBehaviour {
         prevShelfSpot = null;
         shelfRow = null;
         grabbedBook = null;
+        stackBook = null;
         //shelf = GameObject.Find("Bookshelf");
     }
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
             // Check if book is droppable
-            if (bookGrabbed && (bookOnShelf || CheckIfTable())) {
+            if (bookGrabbed && (bookOnShelf || CheckIfTable() || stackBook)) {
                 if (bookOnShelf) {
                     grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 2;   
                     grabbedBook.transform.parent = shelfSpot.transform;
                     shelfSpot = null;
                     rowBooks = null;
                     shiftedBooks = false;
+                }
+                else if (stackBook) {
+                    stackBook.GetComponent<SpriteRenderer>().sortingOrder = 14;
+                    grabbedBook.transform.parent = stackBook.transform;
                 }
                 // Disable control of the book movement
                 bookGrabbed = false;
@@ -119,6 +125,19 @@ public class MouseLMB : MonoBehaviour {
                         GameObject currObj = hit.collider.gameObject;
 
                         if (!bookGrabbed && currObj.tag == "Book") {
+                            Transform parent = currObj.transform.parent;
+                            // If book is in the middle of the stack
+                            if (currObj.transform.childCount > 0) {
+                                MoveBooksDown(currObj);
+                                if (parent) {
+                                    foreach (Transform child in currObj.transform) {
+                                        child.parent = parent;
+                                    }
+                                }
+                            }
+                            else if (parent && parent.position.x < 0) {
+                                parent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                            }
                             bookGrabbed = true;
                             grabbedBook = currObj;
                             grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 15;
@@ -181,10 +200,10 @@ public class MouseLMB : MonoBehaviour {
                 }
                 bookOnShelf = false;
 
-                GameObject stackBook = null;
+                stackBook = null;
                 if (stackBook = CheckIfBook()) {
-                    // Only insert from top
-                    // Take out from anywhere
+                    // TODO: Only insert from top
+                    // TODO: Take out from anywhere
                     Vector3 newBookPos = stackBook.transform.position;
                     newBookPos.y += stackOffsetVal;
                     grabbedBook.transform.position = newBookPos;
@@ -430,4 +449,35 @@ public class MouseLMB : MonoBehaviour {
         }
         return char2 - '0';
     }
+
+    void MoveBooksDown(GameObject removingBook) {
+        // Moves all the books on top of "removingBook" down by 1 in the stack
+        GameObject book = removingBook;
+        Stack<GameObject> books = new Stack<GameObject>();
+
+        int i = 0;
+        while (book && i) {
+            if (i > 5) return;
+            foreach (Transform childBook in book.transform) {
+                if (childBook) {
+                    books.Push(childBook.gameObject);
+                    book = childBook.gameObject;
+                }
+                else {
+                    books.Push(null);
+                    book = null;
+                }
+            }
+            ++i;
+        }
+        
+        /*
+        while (books.Count > 0) {
+            book = books.Pop();
+            if (!book) continue;
+            book.transform.position = book.transform.parent.position;
+        }
+        */
+    }
 }
+

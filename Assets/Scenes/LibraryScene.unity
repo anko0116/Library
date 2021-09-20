@@ -1739,7 +1739,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &1055993093
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3146,7 +3146,7 @@ GameObject:
   - component: {fileID: 1683609951}
   - component: {fileID: 1683609953}
   m_Layer: 0
-  m_Name: Book
+  m_Name: PornBook
   m_TagString: Book
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
