@@ -62,6 +62,7 @@ public class MouseLMB : MonoBehaviour {
     int maxBookCount;
     float bookRadius;
     int shelfLayer;
+    float stackOffsetVal;
     Vector4 deskBounds;
 
     // State change variables
@@ -81,12 +82,13 @@ public class MouseLMB : MonoBehaviour {
         maxBookCount = 12;
         bookRadius = 0.7f;
         shelfLayer = 1;
+        stackOffsetVal = 0.63f;
         deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
 
         bookOnShelf = false;
         shiftedBooks = false;
         bookGrabbed = false;
-        
+
         shelfSpot = null;
         prevShelfSpot = null;
         shelfRow = null;
@@ -171,6 +173,8 @@ public class MouseLMB : MonoBehaviour {
             }
             else {
                 if (shiftedBooks) {
+                    // TODO: books not returning to position when sliding held book
+                    // TODO: delay in reshift
                     ReturnBooksToSpot();
                     rowBooks = null;
                     shiftedBooks = false;
@@ -179,7 +183,11 @@ public class MouseLMB : MonoBehaviour {
 
                 GameObject stackBook = null;
                 if (stackBook = CheckIfBook()) {
-                    grabbedBook.transform.position = stackBook.transform.position;
+                    // Only insert from top
+                    // Take out from anywhere
+                    Vector3 newBookPos = stackBook.transform.position;
+                    newBookPos.y += stackOffsetVal;
+                    grabbedBook.transform.position = newBookPos;
                 } 
                 else {
                     MoveWithMouse();
@@ -280,10 +288,13 @@ public class MouseLMB : MonoBehaviour {
     }
 
     GameObject CheckIfBook() {
+        /*
+        While carrying a book, 
+        */
         // TODO: refactor this code with FindClosestShelf since they both do same thing
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int bookLayer = 15;
-        float bookRadius = 0.3f;
+        float bookRadius = 0.5f;
         Collider2D[] books = Physics2D.OverlapCircleAll(mousePos, bookRadius, bookLayer);
 
         // Find the closest book
@@ -291,6 +302,7 @@ public class MouseLMB : MonoBehaviour {
         float closestDist = float.MaxValue;
         foreach (Collider2D coll in books) {
             if (coll.gameObject.tag != "Book") continue;
+            if (coll.gameObject == grabbedBook) continue;
 
             Vector3 bookPos = coll.transform.position;
             float thisDist = Vector3.Distance(mousePos, bookPos);
@@ -299,7 +311,7 @@ public class MouseLMB : MonoBehaviour {
                 closestDist = thisDist;
             }
         }
-
+        
         if (closestBook) {
             return closestBook.gameObject; 
         }
