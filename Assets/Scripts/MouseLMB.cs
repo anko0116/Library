@@ -129,15 +129,14 @@ public class MouseLMB : MonoBehaviour {
                             // If book is in the middle of the stack
                             if (currObj.transform.childCount > 0) {
                                 MoveBooksDown(currObj);
-                                if (parent) {
-                                    foreach (Transform child in currObj.transform) {
-                                        child.parent = parent;
-                                    }
+                                foreach (Transform child in currObj.transform) {
+                                    child.parent = parent;
                                 }
                             }
                             else if (parent && parent.position.x < 0) {
                                 parent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
                             }
+
                             bookGrabbed = true;
                             grabbedBook = currObj;
                             grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 15;
@@ -200,6 +199,7 @@ public class MouseLMB : MonoBehaviour {
                 }
                 bookOnShelf = false;
 
+                // Book stacking
                 stackBook = null;
                 if (stackBook = CheckIfBook()) {
                     // TODO: Only insert from top
@@ -454,30 +454,33 @@ public class MouseLMB : MonoBehaviour {
         // Moves all the books on top of "removingBook" down by 1 in the stack
         GameObject book = removingBook;
         Stack<GameObject> books = new Stack<GameObject>();
-
         int i = 0;
-        while (book && i) {
-            if (i > 5) return;
+        bool done = false;
+        while (!done) {
+            if (i > 10) break;
+            print(i);
+            print(done);
             foreach (Transform childBook in book.transform) {
                 if (childBook) {
                     books.Push(childBook.gameObject);
                     book = childBook.gameObject;
                 }
                 else {
-                    books.Push(null);
-                    book = null;
+                    done = true;
                 }
             }
             ++i;
         }
-        
-        /*
+
+        i = 0;
         while (books.Count > 0) {
+            if (i > 10) break;
             book = books.Pop();
-            if (!book) continue;
+            //print(book.GetComponent<Renderer>().bounds.center);
             book.transform.position = book.transform.parent.position;
+            ++i;
         }
-        */
+        
     }
 }
 
