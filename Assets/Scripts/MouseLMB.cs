@@ -112,6 +112,7 @@ public class MouseLMB : MonoBehaviour {
                 else if (stackBook) {
                     stackBook.GetComponent<SpriteRenderer>().sortingOrder = 14;
                     grabbedBook.transform.parent = stackBook.transform;
+                    grabbedBook.transform.position = stackBook.transform.position + new Vector3(0f, stackOffsetVal, 0f);
                 }
                 // Disable control of the book movement
                 bookGrabbed = false;
@@ -125,16 +126,18 @@ public class MouseLMB : MonoBehaviour {
                         GameObject currObj = hit.collider.gameObject;
 
                         if (!bookGrabbed && currObj.tag == "Book") {
-                            Transform parent = currObj.transform.parent;
+                            Transform currParent = currObj.transform.parent;
+                            bool hasChildBook = false;
                             // If book is in the middle of the stack
                             if (currObj.transform.childCount > 0) {
                                 MoveBooksDown(currObj);
                                 foreach (Transform child in currObj.transform) {
-                                    child.parent = parent;
+                                    child.parent = currParent;
+                                    hasChildBook = true;
                                 }
                             }
-                            else if (parent && parent.position.x < 0) {
-                                parent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                            else if (currParent && currParent.position.x < 0 && !hasChildBook) {
+                                currParent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
                             }
 
                             bookGrabbed = true;
@@ -207,6 +210,7 @@ public class MouseLMB : MonoBehaviour {
                     Vector3 newBookPos = stackBook.transform.position;
                     newBookPos.y += stackOffsetVal;
                     grabbedBook.transform.position = newBookPos;
+                    print($"{"hello"}, {newBookPos}");
                 } 
                 else {
                     MoveWithMouse();
@@ -245,7 +249,7 @@ public class MouseLMB : MonoBehaviour {
 
     bool BookInShelfScreen() {
         // Returns true if book is inside the shelf screen
-        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // FIXME: Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (grabbedBook.transform.position.x > 0) {
             return true;
         }
@@ -307,9 +311,6 @@ public class MouseLMB : MonoBehaviour {
     }
 
     GameObject CheckIfBook() {
-        /*
-        While carrying a book, 
-        */
         // TODO: refactor this code with FindClosestShelf since they both do same thing
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         int bookLayer = 15;
@@ -455,6 +456,7 @@ public class MouseLMB : MonoBehaviour {
         GameObject book = removingBook;
         Stack<GameObject> books = new Stack<GameObject>();
 
+        // Take all books above removingBook into the stack
         while (book.transform.childCount > 0) {
             foreach (Transform childBook in book.transform) {
                 if (childBook) {
@@ -463,10 +465,9 @@ public class MouseLMB : MonoBehaviour {
                 }
             }
         }
-
+        // Move books down
         while (books.Count > 0) {
             book = books.Pop();
-            //print(book.GetComponent<Renderer>().bounds.center);
             book.transform.position = book.transform.parent.position;
         }
         
