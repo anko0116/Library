@@ -454,31 +454,20 @@ public class MouseLMB : MonoBehaviour {
         // Moves all the books on top of "removingBook" down by 1 in the stack
         GameObject book = removingBook;
         Stack<GameObject> books = new Stack<GameObject>();
-        int i = 0;
-        bool done = false;
-        while (!done) {
-            if (i > 10) break;
-            print(i);
-            print(done);
+
+        while (book.transform.childCount > 0) {
             foreach (Transform childBook in book.transform) {
                 if (childBook) {
                     books.Push(childBook.gameObject);
                     book = childBook.gameObject;
                 }
-                else {
-                    done = true;
-                }
             }
-            ++i;
         }
 
-        i = 0;
         while (books.Count > 0) {
-            if (i > 10) break;
             book = books.Pop();
             //print(book.GetComponent<Renderer>().bounds.center);
             book.transform.position = book.transform.parent.position;
-            ++i;
         }
         
     }
