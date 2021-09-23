@@ -112,7 +112,6 @@ public class MouseLMB : MonoBehaviour {
                 else if (stackBook) {
                     stackBook.GetComponent<SpriteRenderer>().sortingOrder = 14;
                     grabbedBook.transform.parent = stackBook.transform;
-                    grabbedBook.transform.position = stackBook.transform.position + new Vector3(0f, stackOffsetVal, 0f);
                 }
                 // Disable control of the book movement
                 bookGrabbed = false;
@@ -205,12 +204,12 @@ public class MouseLMB : MonoBehaviour {
                 // Book stacking
                 stackBook = null;
                 if (stackBook = CheckIfBook()) {
-                    // TODO: Only insert from top
-                    // TODO: Take out from anywhere
+                    // TODO:
+                    // When book is taken out of the stack, the book is so close
+                    // to the stack that it (preview)puts itself back on the stack
                     Vector3 newBookPos = stackBook.transform.position;
                     newBookPos.y += stackOffsetVal;
                     grabbedBook.transform.position = newBookPos;
-                    print($"{"hello"}, {newBookPos}");
                 } 
                 else {
                     MoveWithMouse();
@@ -454,23 +453,25 @@ public class MouseLMB : MonoBehaviour {
     void MoveBooksDown(GameObject removingBook) {
         // Moves all the books on top of "removingBook" down by 1 in the stack
         GameObject book = removingBook;
-        Stack<GameObject> books = new Stack<GameObject>();
+        int cnt = 0;
 
         // Take all books above removingBook into the stack
         while (book.transform.childCount > 0) {
             foreach (Transform childBook in book.transform) {
-                if (childBook) {
-                    books.Push(childBook.gameObject);
-                    book = childBook.gameObject;
-                }
+                Vector3 downPos = childBook.position;
+                childBook.position = 
+                    new Vector3(downPos.x, downPos.y - stackOffsetVal + (stackOffsetVal * cnt), downPos.z);
+                book = childBook.gameObject;
             }
+            ++cnt;
         }
+        /*
         // Move books down
         while (books.Count > 0) {
             book = books.Pop();
             book.transform.position = book.transform.parent.position;
         }
-        
+        */
     }
 }
 
