@@ -10,3 +10,17 @@ New UI Update September 26th, 2021
 - Dialogue box with text UI
 	Why is Text GUI so dam huge?
 	Why can't I move Canvas object? Canvas not suppose to move
+
+Left Screen:
+- Character
+- LibraryBackground
+- Bookshelf Map Screen
+
+Right Screen:
+- Bookshelf
+- Table
+- 
+
+Entire Screen:
+- Middle border
+- 4:3 GameplayBorder
