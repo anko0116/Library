@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /*
 --- Sorting order for all objects ---
@@ -64,6 +65,8 @@ public class MouseLMB : MonoBehaviour {
     int shelfLayer;
     float stackOffsetVal;
     Vector4 deskBounds;
+    Vector4 shelfBounds;
+    Vector4 bookBounds;
 
     // State change variables
     bool bookOnShelf;
@@ -84,7 +87,10 @@ public class MouseLMB : MonoBehaviour {
         bookRadius = 0.7f;
         shelfLayer = 1;
         stackOffsetVal = 0.63f;
-        deskBounds = new Vector4(-8.0f, -1.0f, -1.5f, -0.7f); // left, right, bottom, top
+        // left-x, right-x, bottom-y, top-y
+        deskBounds = new Vector4(0.5f, 6.0f, -1.9f, -0.6f);
+        shelfBounds = new Vector4(0.25f, 6.3f, -0.65f, 4.75f);
+        bookBounds = new Vector4(0.5f, 6.3f, -1.9f, 4.75f);
 
         bookOnShelf = false;
         shiftedBooks = false;
@@ -155,7 +161,7 @@ public class MouseLMB : MonoBehaviour {
         if (bookGrabbed) {
             RotateBook();
             GameObject closestShelf = null;
-            if (BookInShelfScreen() && (closestShelf = FindClosestShelf())) {
+            if (BookInShelfScreen(grabbedBook) && (closestShelf = FindClosestShelf())) {
                 // Preview book to closest bookshelf if within distance
                 bookOnShelf = true;
                 shelfSpot = closestShelf;
@@ -229,27 +235,36 @@ public class MouseLMB : MonoBehaviour {
 
     void MoveWithMouse() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //float newObjXPos = GetNearestXCoord(mousePos.x);
-        //float newObjYPos = GetNearestYCoord(mousePos.y);
-        float newObjXPos = mousePos.x;
-        float newObjYPos = mousePos.y;
+        float newObjXPos = Math.Min(mousePos.x, bookBounds.y);
+        newObjXPos = Math.Max(newObjXPos, bookBounds.x);
+        float newObjYPos = Math.Min(mousePos.y, bookBounds.w);
+        newObjYPos = Math.Max(newObjYPos, bookBounds.z);
         Vector2 newObjPos = new Vector2(newObjXPos, newObjYPos);
         grabbedBook.transform.position = newObjPos;
     }
 
-    void RotateBook() {
-        if (BookInShelfScreen()) {
-            grabbedBook.transform.rotation = Quaternion.Euler(0, 0, 0);
+    public void RotateBook(GameObject book = null) {
+        /*
+        Detects whether the book is in table screen or shelf screen
+        and changes the rotation of the book based on its location
+        */
+        if (book == null) {
+            book = grabbedBook;
+        }
+        Debug.Assert(book != null, "Book object is null.");
+        if (BookInShelfScreen(book)) {
+            book.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         else {
-            grabbedBook.transform.rotation = Quaternion.Euler(0, 0, 90);
+            book.transform.rotation = Quaternion.Euler(0, 0, 90);
         }
     }
 
-    bool BookInShelfScreen() {
-        // Returns true if book is inside the shelf screen
-        // FIXME: Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (grabbedBook.transform.position.x > 0) {
+    bool BookInShelfScreen(GameObject book) {
+        if (!book) return false;
+        Vector3 bookPos = book.transform.position;
+        if (bookPos.x >= shelfBounds.x && bookPos.x <= shelfBounds.y
+            && bookPos.y >= shelfBounds.z && bookPos.y <= shelfBounds.w) {
             return true;
         }
         return false;
@@ -291,9 +306,8 @@ public class MouseLMB : MonoBehaviour {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // Checking if on top of desk
         // FIXME: need finer coordinate points
-        if (!BookInShelfScreen() && mousePos.x > deskBounds.x &&
-            mousePos.x < deskBounds.y && mousePos.y > deskBounds.z
-            && mousePos.y < deskBounds.w) {
+        if (mousePos.x > deskBounds.x && mousePos.x < deskBounds.y
+            && mousePos.y > deskBounds.z && mousePos.y < deskBounds.w) {
             return true;
         }
         return false;

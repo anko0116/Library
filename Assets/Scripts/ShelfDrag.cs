@@ -25,8 +25,9 @@ public class ShelfDrag : MonoBehaviour
     }
 
     float ShelfBoundX(float mousePosX) {
-        float leftBound = -9.0f;
-        float rightBound = 18.0f;
+        // This bound is not the same as the shelfBounds in MouseLMB script
+        float leftBound = -5.22f;
+        float rightBound = 11.5f;
 
         if (mousePosX > rightBound) {
             return rightBound;
@@ -38,8 +39,9 @@ public class ShelfDrag : MonoBehaviour
     }
 
     float ShelfBoundY(float mousePosY) {
-        float topBound = 5.54f;
-        float bottomBound = -5.54f;
+        // This bound is not the same as the shelfBounds in MouseLMB script
+        float topBound = 6.05f;
+        float bottomBound = -2.0f;
 
         if (mousePosY > topBound) {
             return topBound;
