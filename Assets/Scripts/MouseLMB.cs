@@ -51,7 +51,11 @@ IMPLEMENTATION ORDER LIST:
 
     - don't let books stack on top of each on the table
 */
-
+/*
+Table rules
+- y-axis locked but x-axis freeflow anywhere
+- If you can see the shelf from top to bottom edge of the inner floor, then book can magnet to it
+*/
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
