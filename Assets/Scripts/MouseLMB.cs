@@ -47,9 +47,7 @@ IMPLEMENTATION ORDER LIST:
     DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
     DONE Skip magnet when book is under it
     DONE make space for 12 rowSpots
-    DONE? shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
-
-    - don't let books stack on top of each on the table
+    DONE shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
 */
 /*
 Table rules
@@ -203,8 +201,6 @@ public class MouseLMB : MonoBehaviour {
             }
             else {
                 if (shiftedBooks) {
-                    // TODO: books not returning to position when sliding held book
-                    // TODO: delay in reshift
                     ReturnBooksToSpot();
                     rowBooks = null;
                     shiftedBooks = false;
