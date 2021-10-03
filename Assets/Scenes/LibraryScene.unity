@@ -2053,8 +2053,8 @@ GameObject:
   m_Component:
   - component: {fileID: 550111629}
   - component: {fileID: 550111628}
-  m_Layer: 0
-  m_Name: gracie_Happy
+  m_Layer: 10
+  m_Name: Gracie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2098,7 +2098,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: cbdd242ef80032f4bb94b01b01bfe90b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2118,7 +2118,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550111627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.34, y: 0.6853, z: 0}
+  m_LocalPosition: {x: -3.34, y: 0.6853, z: 60}
   m_LocalScale: {x: 0.9, y: 0.89491075, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3455,9 +3455,9 @@ Canvas:
   m_GameObject: {fileID: 1021588740}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -3465,7 +3465,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 99
   m_TargetDisplay: 0
 --- !u!224 &1021588744
 RectTransform:
@@ -4050,8 +4050,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.9, y: 0.046485}
-  m_SizeDelta: {x: 285.2866, y: 314.39832}
+  m_AnchoredPosition: {x: -4.1871, y: 0.000058602}
+  m_SizeDelta: {x: 288.75375, y: 353.6753}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1153073588
 MonoBehaviour:
@@ -5578,6 +5578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1507945504}
+  - component: {fileID: 1507945505}
   m_Layer: 5
   m_Name: Minimap
   m_TagString: Untagged
@@ -5602,9 +5603,28 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -137.2, y: 67.8}
-  m_SizeDelta: {x: -1086.4697, y: 314.4913}
+  m_AnchoredPosition: {x: -142, y: 48.184}
+  m_SizeDelta: {x: -502.872, y: 353.6754}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &1507945505
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507945503}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7bf2a4f15f796b745812862102e9eb08, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1519995423
 GameObject:
   m_ObjectHideFlags: 0

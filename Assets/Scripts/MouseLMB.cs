@@ -56,11 +56,13 @@ Table rules
 */
 
 // FIXME: 1. slider animation
+//      make minimap go behind in rendering order
 // FIXME: 2. snapshot for the minimap (no live update)
 // FIXME: 3. move desk back to the left screen
 // FIXME: 4. shuffling pushes books permanently
 // FIXME: 5. UI buttons
 // FIXME: 6. Cassette tape screen (w/ walkman)
+// FIXME: 7. Finalize sorting orders
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
