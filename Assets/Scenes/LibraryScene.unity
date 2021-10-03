@@ -3465,7 +3465,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 98
   m_TargetDisplay: 0
 --- !u!224 &1021588744
 RectTransform:
@@ -4050,8 +4050,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.1871, y: 0.000058602}
-  m_SizeDelta: {x: 288.75375, y: 353.6753}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 265.61264, y: 301.84412}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1153073588
 MonoBehaviour:
@@ -5579,6 +5579,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1507945504}
   - component: {fileID: 1507945505}
+  - component: {fileID: 1507945506}
   m_Layer: 5
   m_Name: Minimap
   m_TagString: Untagged
@@ -5603,8 +5604,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -142, y: 48.184}
-  m_SizeDelta: {x: -502.872, y: 353.6754}
+  m_AnchoredPosition: {x: -436.5, y: 57}
+  m_SizeDelta: {x: -522.04626, y: 301.8443}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1507945505
 Animator:
@@ -5625,6 +5626,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1507945506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507945503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808513527accc3740a024a14b9f9497d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delta: 0.05
 --- !u!1 &1519995423
 GameObject:
   m_ObjectHideFlags: 0

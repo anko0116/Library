@@ -56,7 +56,7 @@ Table rules
 */
 
 // FIXME: 1. slider animation
-//      make minimap go behind in rendering order
+//      make minimap go behind in rendering order (DONE)
 // FIXME: 2. snapshot for the minimap (no live update)
 // FIXME: 3. move desk back to the left screen
 // FIXME: 4. shuffling pushes books permanently
