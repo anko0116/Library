@@ -55,6 +55,13 @@ Table rules
 - If you can see the shelf from top to bottom edge of the inner floor, then book can magnet to it
 */
 
+// FIXME: 1. slider animation
+// FIXME: 2. snapshot for the minimap (no live update)
+// FIXME: 3. move desk back to the left screen
+// FIXME: 4. shuffling pushes books permanently
+// FIXME: 5. UI buttons
+// FIXME: 6. Cassette tape screen (w/ walkman)
+
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
 public class MouseLMB : MonoBehaviour {
@@ -65,6 +72,8 @@ public class MouseLMB : MonoBehaviour {
     int maxBookCount;
     float bookRadius;
     int shelfLayer;
+    int bookOnShelfLayer;
+    int bookOnDeskLayer;
     float stackOffsetVal;
     Vector4 deskBounds;
     Vector4 shelfBounds;
@@ -87,11 +96,13 @@ public class MouseLMB : MonoBehaviour {
     void Start() {
         maxBookCount = 12;
         bookRadius = 0.7f;
-        shelfLayer = 1;
-        stackOffsetVal = 0.63f;
+        shelfLayer = 8;
+        bookOnShelfLayer = 8;
+        bookOnDeskLayer = 9;
+        stackOffsetVal = 0.5f;
         // left-x, right-x, bottom-y, top-y
         deskBounds = new Vector4(0.5f, 6.0f, -1.9f, -0.6f);
-        shelfBounds = new Vector4(0.25f, 6.3f, -0.65f, 4.75f);
+        shelfBounds = new Vector4(-5f, 11.4f, -12f, 10f);
         bookBounds = new Vector4(0.5f, 6.3f, -1.9f, 4.75f);
 
         bookOnShelf = false;
@@ -103,7 +114,6 @@ public class MouseLMB : MonoBehaviour {
         shelfRow = null;
         grabbedBook = null;
         stackBook = null;
-        //shelf = GameObject.Find("Bookshelf");
     }
 
     void Update() {
@@ -168,6 +178,7 @@ public class MouseLMB : MonoBehaviour {
                 bookOnShelf = true;
                 shelfSpot = closestShelf;
                 shelfRow = shelfSpot.transform.parent.gameObject;
+                grabbedBook.layer = bookOnShelfLayer;
 
                 bool spotHasBook = closestShelf.transform.childCount != 0;
                 if (spotHasBook) {
@@ -196,6 +207,7 @@ public class MouseLMB : MonoBehaviour {
                     }
                 }
                 else {
+                    // Bookshelf spot is open!
                     grabbedBook.transform.position = closestShelf.transform.position;
                 }
             }
@@ -206,6 +218,7 @@ public class MouseLMB : MonoBehaviour {
                     shiftedBooks = false;
                 }
                 bookOnShelf = false;
+                grabbedBook.layer = bookOnDeskLayer;
 
                 // Book stacking
                 stackBook = null;
@@ -279,7 +292,7 @@ public class MouseLMB : MonoBehaviour {
 
         // Find all the shelves within certain radius
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Collider2D[] shelves = Physics2D.OverlapCircleAll(mousePos, bookRadius, shelfLayer);
+        Collider2D[] shelves = Physics2D.OverlapCircleAll(mousePos, bookRadius, 1 << shelfLayer);
 
         // Find the closest shelf
         Collider2D closestShelf = null;
@@ -326,9 +339,9 @@ public class MouseLMB : MonoBehaviour {
     GameObject CheckIfBook() {
         // TODO: refactor this code with FindClosestShelf since they both do same thing
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        int bookLayer = 15;
+        int bookLayer = 9;
         float bookRadius = 0.5f;
-        Collider2D[] books = Physics2D.OverlapCircleAll(mousePos, bookRadius, bookLayer);
+        Collider2D[] books = Physics2D.OverlapCircleAll(mousePos, bookRadius, 1 << bookLayer);
 
         // Find the closest book
         Collider2D closestBook = null;
