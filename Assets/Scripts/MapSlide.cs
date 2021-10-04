@@ -8,14 +8,12 @@ public class MapSlide : MonoBehaviour
     Vector3 targetPos;
     public float delta;
     bool slide;
-    bool mapShown;
     void Start()
     {
         minimap = gameObject.transform.GetChild(0).gameObject;
         targetPos = new Vector3(-3.34f, 0.7f, 0f);
-        delta = 0.05f;
+        delta = 0.01f;
         slide = true;
-        mapShown = false;
     }
     void Update()
     {
@@ -25,6 +23,7 @@ public class MapSlide : MonoBehaviour
     }
 
     void MoveMap() {
+        // TODO: slow down delta
         Vector3 initPos = minimap.transform.position;
         minimap.transform.position = Vector3.MoveTowards(initPos, targetPos, delta);
     }

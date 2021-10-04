@@ -57,12 +57,22 @@ Table rules
 
 // FIXME: 1. slider animation
 //      make minimap go behind in rendering order (DONE)
+//      Implement trigger (UI button) (DONE)
+//////////////////////////////////////////////////////////
 // FIXME: 2. snapshot for the minimap (no live update)
+//        2.1. ghost preview (when book can't be placed down. ANYWHERE)
+//          this includes EVERY LOCATION YOU CAN'T PUT THE BOOK DOWN.
+//          (Should the bookshelf screen also have book grayed out?)
 // FIXME: 3. move desk back to the left screen
-// FIXME: 4. shuffling pushes books permanently
+//      when slider animation plays, center camera on character
+//      slow down minimap sliding speed as minimap gets closer to target position
+// FIXME: 4. shuffling should NOT push books permanently (bug)
 // FIXME: 5. UI buttons
-// FIXME: 6. Cassette tape screen (w/ walkman)
-// FIXME: 7. Finalize sorting orders
+// FIXME: 6. Dialogue box (putting in new text and character)
+// FIXME: 7. Cassette tape screen (w/ walkman)
+// FIXME: 8. Finalize sorting rendering orders
+// FIXME: 9. Book and tapes spawning for different days
+//      exact locations
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 
