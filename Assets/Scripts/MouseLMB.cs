@@ -60,12 +60,14 @@ Table rules
 //      Implement trigger (UI button) (DONE)
 //////////////////////////////////////////////////////////
 // FIXME: 2. snapshot for the minimap (no live update)
-//        2.1. ghost preview (when book can't be placed down. ANYWHERE)
-//          this includes EVERY LOCATION YOU CAN'T PUT THE BOOK DOWN.
-//          (Should the bookshelf screen also have book grayed out?)
+//        Don't show held book
+//         Minimap will show books that are settled on the shelf (permanently locked to the shelf)
 // FIXME: 3. move desk back to the left screen
+//      Put the desk back and make sure book interactions are working fine.
+//      Move character little bit to the left (so that camera can center them when gameplay begins)
 //      when slider animation plays, center camera on character
 //      slow down minimap sliding speed as minimap gets closer to target position
+//      3.1 Slide in bookshelf (DONE)
 // FIXME: 4. shuffling should NOT push books permanently (bug)
 // FIXME: 5. UI buttons
 // FIXME: 6. Dialogue box (putting in new text and character)
@@ -73,6 +75,9 @@ Table rules
 // FIXME: 8. Finalize sorting rendering orders
 // FIXME: 9. Book and tapes spawning for different days
 //      exact locations
+// FIXME: 10. ghost preview (when book can't be placed down. ANYWHERE)
+//          this includes EVERY LOCATION YOU CAN'T PUT THE BOOK DOWN.
+//          (Should the bookshelf screen also have book grayed out?)
 
 // https://stackoverflow.com/questions/52356828/what-is-the-most-optimal-way-of-communication-between-scripts-in-unity
 

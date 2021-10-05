@@ -7,8 +7,11 @@ public class ButtonGameplay : MonoBehaviour
 {
     // Attached to GameplayButton
     GameObject minimap;
-    Vector3 initPos;
-    Vector3 targetPos;
+    GameObject bookshelf;
+    Vector3 mapInitPos;
+    Vector3 mapTargetPos;
+    Vector3 shelfInitPos;
+    Vector3 shelfTargetPos;
     float delta;
     bool mapShown;
     Button gameplayButton;
@@ -20,8 +23,11 @@ public class ButtonGameplay : MonoBehaviour
         gameplayButton.onClick.AddListener(TaskOnClick);
 
         minimap = GameObject.Find("MapCanvas").transform.GetChild(0).gameObject;
-        initPos = minimap.transform.position;
-        targetPos = new Vector3(-3.34f, 0.7f, 0f);
+        bookshelf = GameObject.Find("Bookshelf");
+        mapInitPos = minimap.transform.position;
+        mapTargetPos = new Vector3(-3.34f, mapInitPos.y, 0f);
+        shelfInitPos = bookshelf.transform.position;
+        shelfTargetPos = new Vector3(13f, shelfInitPos.y, 0f);
         delta = 0.01f;
         mapShown = false;
         slide = false;
@@ -31,14 +37,18 @@ public class ButtonGameplay : MonoBehaviour
         slide = true;
     }
 
-    void MoveMapInside(ref Vector3 mapPos) {
+    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos) {
         // TODO: slow down delta
-        minimap.transform.position = Vector3.MoveTowards(mapPos, targetPos, delta);
+        minimap.transform.position = Vector3.MoveTowards(mapPos, mapTargetPos, delta);
+        bookshelf.transform.position = Vector3.MoveTowards(shelfPos, shelfTargetPos, delta);
     }
 
-    void MoveMapOutside(ref Vector3 mapPos) {
+    void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos) {
         // TODO: slow down delta
-        minimap.transform.position = Vector3.MoveTowards(mapPos, initPos, delta);
+        minimap.transform.position = 
+            Vector3.MoveTowards(mapPos, mapInitPos, delta);
+        bookshelf.transform.position =
+            Vector3.MoveTowards(shelfPos, shelfInitPos, delta);
     }
 
 
@@ -46,17 +56,18 @@ public class ButtonGameplay : MonoBehaviour
     {
         if (slide) {
             Vector3 mapPos = minimap.transform.position;
-            if (mapShown && mapPos == initPos) {
+            Vector3 shelfPos = bookshelf.transform.position;
+            if (mapShown && mapPos == mapInitPos) {
                 slide = false;
                 mapShown = false;
             }
-            else if (!mapShown && mapPos == targetPos) {
+            else if (!mapShown && mapPos == mapTargetPos) {
                 slide = false;
                 mapShown = true;
             }
             else {
-                if (mapShown) MoveMapOutside(ref mapPos);
-                else MoveMapInside(ref mapPos);
+                if (mapShown) MoveMapOutside(ref mapPos, ref shelfPos);
+                else MoveMapInside(ref mapPos, ref shelfPos);
             }
         }
         
