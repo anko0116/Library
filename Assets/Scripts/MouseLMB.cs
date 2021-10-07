@@ -59,6 +59,11 @@ Table rules
 //      make minimap go behind in rendering order (DONE)
 //      Implement trigger (UI button) (DONE)
 //////////////////////////////////////////////////////////
+// FIXME: Fix bookshelf moving boundaries and sorting order so that
+// bookshelf goes behind LibraryBackground
+//      - 1. camera zoom => library background and character scale up and shift? 
+//              use Vector3.toward(...)
+
 // FIXME: 2. snapshot for the minimap (no live update)
 //        Don't show held book
 //         Minimap will show books that are settled on the shelf (permanently locked to the shelf)

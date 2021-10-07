@@ -5,29 +5,48 @@ using UnityEngine;
 public class ShelfDrag : MonoBehaviour
 {
     private Vector3 offset;
+    private Vector3 shelfOrigPos;
+    private GameObject bookshelf;
+
+    void Start() {
+        bookshelf = GameObject.Find("Bookshelf");
+    }
 
     void OnMouseDown() {
         // Calculate the offset so that
         // dragging shelf doesn't put the shelf on the cursor location
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offset = transform.position - mousePos;
+        //offset = transform.position - mousePos;
+        //offset = gameObject.transform.position;
+        offset = mousePos;
+        shelfOrigPos = bookshelf.transform.position;
+        //Screen.showCursor = false;
     }
 
     void OnMouseDrag() {
         MoveWithMouse();
     }
 
+    void OnMouseUp() {
+        //Screen.showCursor = true;
+    }
+
     void MoveWithMouse() {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float newObjXPos = ShelfBoundX(mousePos.x + offset.x);
-        float newObjYPos = ShelfBoundY(mousePos.y + offset.y);
-        transform.position = new Vector2(newObjXPos, newObjYPos);
+        Vector3 bookPos = bookshelf.transform.position;
+        //Vector3 mousePos = bookshelf.transform.position;
+        float deltaX = mousePos.x - offset.x;
+        float deltaY = mousePos.y - offset.y;
+        float newX = ShelfBoundX(shelfOrigPos.x + deltaX);
+        float newY = ShelfBoundY(shelfOrigPos.y + deltaY);
+        bookshelf.transform.position = new Vector2(newX, newY);
     }
 
     float ShelfBoundX(float mousePosX) {
+        return mousePosX;
         // This bound is not the same as the shelfBounds in MouseLMB script
-        float leftBound = -5.22f;
-        float rightBound = 11.5f;
+        float leftBound = -10f;
+        float rightBound = 20f;
 
         if (mousePosX > rightBound) {
             return rightBound;
@@ -39,9 +58,10 @@ public class ShelfDrag : MonoBehaviour
     }
 
     float ShelfBoundY(float mousePosY) {
+        return mousePosY;
         // This bound is not the same as the shelfBounds in MouseLMB script
-        float topBound = 6.05f;
-        float bottomBound = -2.0f;
+        float topBound = -20f;
+        float bottomBound = 10.0f;
 
         if (mousePosY > topBound) {
             return topBound;
@@ -50,17 +70,5 @@ public class ShelfDrag : MonoBehaviour
             return bottomBound;
         }
         return mousePosY;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
