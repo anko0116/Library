@@ -4,55 +4,15 @@ using UnityEngine;
 using System;
 
 /*
---- Sorting order for all objects ---
-Book 15 or 2
-Character 10
-Desk 10
-Library background 5
-Bookshelf 1
-Bookshelf background 0
-
-*/
-
-/*
-- When a book is certain distance from a shelf spot, it gets attached to it
-    - The magnet distance must be small so that game can clearly distinguish between adjacent spots
-    - Attach empty gameobject to shelf spots
-    - Book bound to the shelf when moving shelf
-    - How does the book know which spot is the closest out of all the spots on the shelf screen?
-        - Binary search: Left half of the screen or right half? -> left half or right half? -> top half or bottom half?
-            Once the shelf is decided, do a linear search on the 12 spots?
-            - Data structure to store the shelf points
-                - list of list of list...???
-                - just a single list but the indices "indicate" the location
-        - Hardcode the coordinates for all the spots: only possible when the visuals are FINAL
-
-THREE STATES TO CONSIDER:
-    1. ON THE SHELF
-    2. HOLDING THE BOOK (table screen or shelf screen)
-    3. ON THE TABLE
-
-IMPLEMENTATION ORDER LIST:
-    DONE Book changes its orientation depending on which screen it's on while holding
-    DONE Able to drop the book on the table
-    Done Place the book on the shelf
-    DONE Magnet shelf
-    DONE move bookshelf by holding and dragging LMB
-    DONE Book stays attached to the bookshelf even when bookshelf moves
-        Put the book under the gameobject of BookShelf
-    DONE Change sortingOrder of the books when they're on shelf vs otherwise
-    DONE Bookshelf dragging equation = Bookshelf.position + MouseMovement + Time.delta (Something like this)
-    DONE prevent placing books on top of each other (not talking about stacking)
-    DONE Move all the ShelfSpot objects into correct positions
-    DONE bug: when grabbing book off the shelf, the book magnets towards a farther away shelf
-    DONE Skip magnet when book is under it
-    DONE make space for 12 rowSpots
-    DONE shuffling = inserting books between other books on the shelf (not possible when bookshelf is full)
-*/
-/*
 Table rules
 - y-axis locked but x-axis freeflow anywhere
 - If you can see the shelf from top to bottom edge of the inner floor, then book can magnet to it
+*/
+
+/*
+- 30% height of the inner box for the dialogue box (height = 2.79) (DONE)
+- 10% height for desk (inner box) (height = 0.93) (DONE)
+- Inside rose border, y-range (-4.65, 4.65), x-range (-6.15, 6.15 = 12.25)
 */
 
 // FIXME: 1. slider animation
@@ -60,10 +20,19 @@ Table rules
 //      Implement trigger (UI button) (DONE)
 //////////////////////////////////////////////////////////
 // FIXME: Fix bookshelf moving boundaries and sorting order so that
-// bookshelf goes behind LibraryBackground
-//      - 1. camera zoom => library background and character scale up and shift? 
-//              use Vector3.toward(...)
+//        bookshelf goes behind LibraryBackground
+//      - Use layer masking to hide the bookshelf while it's dragged around (DONE)
 
+//      (DONE)
+//      - Bug: books can still attach to shelves and desks even when shelves are masked/invisible
+//          - Turn off shelfSpots when they're not visible 
+//              if shelf's left border's x position <= mask square's right border's x position
+//                  then leave the shelfSpot activated
+//          - Limit desk boundaries to exclude ones covered by shelf and map
+//          - Get right x-coord of map and left x-coord of shelf for book boundaries
+
+// FIXME: camera shift => library background and character shift? 
+//              use Vector3.toward(...)
 // FIXME: 2. snapshot for the minimap (no live update)
 //        Don't show held book
 //         Minimap will show books that are settled on the shelf (permanently locked to the shelf)
@@ -98,7 +67,7 @@ public class MouseLMB : MonoBehaviour {
     int bookOnDeskLayer;
     float stackOffsetVal;
     Vector4 deskBounds;
-    Vector4 shelfBounds;
+    public Vector4 shelfBounds;
     Vector4 bookBounds;
 
     // State change variables
@@ -123,9 +92,9 @@ public class MouseLMB : MonoBehaviour {
         bookOnDeskLayer = 9;
         stackOffsetVal = 0.5f;
         // left-x, right-x, bottom-y, top-y
-        deskBounds = new Vector4(0.5f, 6.0f, -1.9f, -0.6f);
-        shelfBounds = new Vector4(-5f, 11.4f, -12f, 10f);
-        bookBounds = new Vector4(0.5f, 6.3f, -1.9f, 4.75f);
+        deskBounds = new Vector4(-1.4f, 1.4f, -1.62f, -1.17f);
+        shelfBounds = new Vector4(-1.675f, 10f, -7.5f, 10.3f);
+        bookBounds = new Vector4(-1.35f, 6f, -1.8f, 4.4f);
 
         bookOnShelf = false;
         shiftedBooks = false;
@@ -143,14 +112,17 @@ public class MouseLMB : MonoBehaviour {
             // Check if book is droppable
             if (bookGrabbed && (bookOnShelf || CheckIfTable() || stackBook)) {
                 if (bookOnShelf) {
-                    grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 2;   
+                    SpriteRenderer bookRend = grabbedBook.GetComponent<SpriteRenderer>();
+                    bookRend.sortingOrder = 80;
+                    bookRend.maskInteraction = SpriteMaskInteraction.VisibleOutsideMask;   
                     grabbedBook.transform.parent = shelfSpot.transform;
+                    grabbedBook.layer = bookOnShelfLayer;
                     shelfSpot = null;
                     rowBooks = null;
                     shiftedBooks = false;
                 }
                 else if (stackBook) {
-                    stackBook.GetComponent<SpriteRenderer>().sortingOrder = 14;
+                    stackBook.GetComponent<SpriteRenderer>().sortingOrder = 80;
                     grabbedBook.transform.parent = stackBook.transform;
                 }
                 // Disable control of the book movement
@@ -176,12 +148,15 @@ public class MouseLMB : MonoBehaviour {
                                 }
                             }
                             else if (currParent && currParent.position.x < 0 && !hasChildBook) {
-                                currParent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                                currParent.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 80;
                             }
 
                             bookGrabbed = true;
                             grabbedBook = currObj;
-                            grabbedBook.GetComponent<SpriteRenderer>().sortingOrder = 15;
+                            SpriteRenderer bookRend = 
+                                grabbedBook.GetComponent<SpriteRenderer>();
+                            bookRend.sortingOrder = 80;
+                            bookRend.maskInteraction = SpriteMaskInteraction.None;
                             grabbedBook.transform.parent = null;
                         }
                         // TODO: click on ">>>" to continue dialogue
@@ -200,7 +175,6 @@ public class MouseLMB : MonoBehaviour {
                 bookOnShelf = true;
                 shelfSpot = closestShelf;
                 shelfRow = shelfSpot.transform.parent.gameObject;
-                grabbedBook.layer = bookOnShelfLayer;
 
                 bool spotHasBook = closestShelf.transform.childCount != 0;
                 if (spotHasBook) {
@@ -297,12 +271,12 @@ public class MouseLMB : MonoBehaviour {
 
     bool BookInShelfScreen(GameObject book) {
         if (!book) return false;
+    
         Vector3 bookPos = book.transform.position;
-        if (bookPos.x >= shelfBounds.x && bookPos.x <= shelfBounds.y
-            && bookPos.y >= shelfBounds.z && bookPos.y <= shelfBounds.w) {
-            return true;
+        if (bookPos.x >= deskBounds.x && bookPos.x <= deskBounds.y) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     GameObject FindClosestShelf() {

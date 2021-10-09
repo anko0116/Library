@@ -8,10 +8,15 @@ public class ButtonGameplay : MonoBehaviour
     // Attached to GameplayButton
     GameObject minimap;
     GameObject bookshelf;
+    GameObject blackBorder;
+
     Vector3 mapInitPos;
     Vector3 mapTargetPos;
     Vector3 shelfInitPos;
     Vector3 shelfTargetPos;
+    Vector3 borderInitPos;
+    Vector3 borderTargetPos;
+
     float delta;
     bool mapShown;
     Button gameplayButton;
@@ -22,14 +27,16 @@ public class ButtonGameplay : MonoBehaviour
         gameplayButton = GetComponent<Button>();
         gameplayButton.onClick.AddListener(TaskOnClick);
 
-        //minimap = GameObject.Find("MapCanvas").transform.GetChild(0).gameObject;
-        minimap = GameObject.Find("ShelfCanvas").transform.GetChild(0).gameObject;
+        minimap = GameObject.Find("MapCanvas").transform.GetChild(0).gameObject;
         bookshelf = GameObject.Find("Bookshelf");
+        blackBorder = GameObject.Find("BlackBorder");
 
         mapInitPos = minimap.transform.position;
-        mapTargetPos = new Vector3(-4f, mapInitPos.y, 0f);
+        mapTargetPos = new Vector3(-3.63f, mapInitPos.y, 0f);
         shelfInitPos = bookshelf.transform.position;
-        shelfTargetPos = new Vector3(13f, shelfInitPos.y, 0f);
+        shelfTargetPos = new Vector3(10.04f, shelfInitPos.y, 0f);
+        borderInitPos = blackBorder.transform.position;
+        borderTargetPos = new Vector3(2.1f, borderInitPos.y, 0f);
 
         delta = 0.01f;
         mapShown = false;
@@ -40,18 +47,21 @@ public class ButtonGameplay : MonoBehaviour
         slide = true;
     }
 
-    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos) {
+    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 borderPos) {
         // TODO: slow down delta
         minimap.transform.position = Vector3.MoveTowards(mapPos, mapTargetPos, delta);
-        //bookshelf.transform.position = Vector3.MoveTowards(shelfPos, shelfTargetPos, delta);
+        bookshelf.transform.position = Vector3.MoveTowards(shelfPos, shelfTargetPos, delta);
+        blackBorder.transform.position = Vector3.MoveTowards(borderPos, borderTargetPos, delta);
     }
 
-    void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos) {
+    void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 borderPos) {
         // TODO: slow down delta
         minimap.transform.position = 
             Vector3.MoveTowards(mapPos, mapInitPos, delta);
-        //bookshelf.transform.position =
-            //Vector3.MoveTowards(shelfPos, shelfInitPos, delta);
+        bookshelf.transform.position =
+            Vector3.MoveTowards(shelfPos, shelfInitPos, delta);
+        blackBorder.transform.position =
+            Vector3.MoveTowards(borderPos, borderInitPos, delta);
     }
 
 
@@ -60,6 +70,7 @@ public class ButtonGameplay : MonoBehaviour
         if (slide) {
             Vector3 mapPos = minimap.transform.position;
             Vector3 shelfPos = bookshelf.transform.position;
+            Vector3 borderPos = blackBorder.transform.position;
             if (mapShown && mapPos == mapInitPos) {
                 slide = false;
                 mapShown = false;
@@ -69,8 +80,8 @@ public class ButtonGameplay : MonoBehaviour
                 mapShown = true;
             }
             else {
-                if (mapShown) MoveMapOutside(ref mapPos, ref shelfPos);
-                else MoveMapInside(ref mapPos, ref shelfPos);
+                if (mapShown) MoveMapOutside(ref mapPos, ref shelfPos, ref borderPos);
+                else MoveMapInside(ref mapPos, ref shelfPos, ref borderPos);
             }
         }
         

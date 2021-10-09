@@ -1,26 +1,16 @@
-New UI Update September 26th, 2021
+Updated October 9th, 2021
 
-- Transparent, black dialogue box
-	How to make it transparent?
-- 4:3 rosegold gameplay border
-- Table moved to right side of the screen - below the bookshelf
-- Black border between left and right screens
-- Background wallpaper
-	Will need to be shaped around the gameplay screen?
-- Dialogue box with text UI
-	Why is Text GUI so dam huge?
-	Why can't I move Canvas object? Canvas not suppose to move
+Static images:
+- Rosegold border = 100
+- OutsideBackground = 99
+- LibraryBackground (fireplace) = 52  
+- Character = 55
+- Desk = 55
 
-Left Screen:
-- Character
-- LibraryBackground
-- Bookshelf Map Screen
+- DialogueBlackBox = 100
 
-Right Screen:
-- Bookshelf
-- Table
-- 
-
-Entire Screen:
-- Middle border
-- 4:3 GameplayBorder
+Interactables:
+- Books = 80
+- Bookshelf (white background) = 78 
+- Shelf (wooden shelf) = 79
+- Blackborder = 78
