@@ -32,7 +32,6 @@ public class BookMove : MonoBehaviour
     private enum BookState { OnShelf, OnTable, Holding};
 
     GameObject bookshelf; // Neeeded for the position of the bookshelf
-    ShelfMove shelfScr; // Needed to check if shelf grabbed
     BookState bookState;
 
     float bookRadius;
@@ -41,7 +40,6 @@ public class BookMove : MonoBehaviour
     void Start()
     {
         bookshelf = GameObject.Find("Bookshelf");
-        shelfScr = bookshelf.GetComponent<ShelfMove>();
         bookState = BookState.OnTable;
 
         bookRadius = 1.0f;
@@ -61,10 +59,6 @@ public class BookMove : MonoBehaviour
         if (bookState == BookState.OnShelf) {
             // Change rotation of the book
             transform.rotation = Quaternion.Euler(0, 0, 0);
-            if (shelfScr.grabbed) {
-                // Move with the shelf
-                //transform.position = whatever the position should be for the book
-            }
         }
         else if (bookState == BookState.OnTable) {
             // Change rotation of the book
