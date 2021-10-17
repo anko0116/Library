@@ -1,0 +1,67 @@
+Things to watch out for:
+- Saving and loading game (certain checkpoints?)
+    - Checkpoints:
+        - "Open Library"
+        - "Close Library"
+        - "Store"
+        - "Home"
+- format of our XML files
+    - Things to store:
+        - Current location (Library? Store? Cutscene? Home)
+        - Character name
+        - Character border?
+        - Character name's color?
+        - Character's dialogues
+        - In-dialogue specifics
+            - Different-timed pauses
+    <Day>
+    Gameplay
+    <Location> <-- this indicates change of location
+        Library
+        Cutscene
+        Store
+        Home
+    </Location>
+    <Interaction>
+    </Interaction>
+
+    <Day>
+    [Gameplay | None]
+    [Library, Cutscene, Store, Home]
+    </Day>
+
+- Characters
+- Books that characters will give
+
+
+Interaction Framework:
+    1. NPC walks in
+    2. Dialogue back and forth
+    -  Another NPC enters
+    3. Gameplay (Retrieving or Organizing books)
+    4. Repeat from #2 until END 
+
+Example Day:
+    Open Library (organizing gameplay?)
+    Interaction-1
+    Interaction-2
+    ...
+    Interaction-n
+    Close Library (organizing gameplay?) <- maybe not needed for closing
+    Store (Dodi's)
+    Home (Hot tub time!)
+
+
+Day 1:
+    Cutscene - Opening/Intro (Smoky Galaxy...) with arts and texts
+    Black screen
+    "Open eyes" animation
+    Interaction-Dodi,Pip
+    Interaction-Milo
+    Interaction-Dodi
+    LastInteraction-Lani
+    Interaction-Store
+
+TOOL TO IMPORT DOCUMENT TO XML
+SO THAT WE DON'T HAVE TO MANUALLY CHANGE XML FOR EVERY SINGLE CHANGE
+IN DIALOGUE

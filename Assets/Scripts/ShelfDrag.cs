@@ -6,23 +6,21 @@ public class ShelfDrag : MonoBehaviour
 {
     private Vector3 offset;
     private Vector3 shelfOrigPos;
-    private GameObject bookshelf;
     private Vector4 shelfBounds;
+    
+    private GameObject bookshelf;
 
     void Start() {
         bookshelf = GameObject.Find("Bookshelf");
-        shelfBounds = GameObject.Find("MainCamera").GetComponent<MouseLMB>().shelfBounds;
+        shelfBounds = new Vector4(-1.4f, 10f, -7.5f, 10.3f);
     }
 
     void OnMouseDown() {
         // Calculate the offset so that
         // dragging shelf doesn't put the shelf on the cursor location
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //offset = transform.position - mousePos;
-        //offset = gameObject.transform.position;
         offset = mousePos;
         shelfOrigPos = transform.position;
-        //https://docs.unity3d.com/ScriptReference/Cursor.html
         Cursor.visible = false;
     }
 

@@ -38,7 +38,7 @@ public class ButtonGameplay : MonoBehaviour
         borderInitPos = blackBorder.transform.position;
         borderTargetPos = new Vector3(2.1f, borderInitPos.y, 0f);
 
-        delta = 0.01f;
+        delta = 0.1f;
         mapShown = false;
         slide = false;
     }

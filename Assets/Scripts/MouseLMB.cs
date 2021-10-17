@@ -15,41 +15,44 @@ Table rules
 - Inside rose border, y-range (-4.65, 4.65), x-range (-6.15, 6.15 = 12.25)
 */
 
-// FIXME: 1. slider animation
-//      make minimap go behind in rendering order (DONE)
-//      Implement trigger (UI button) (DONE)
-//////////////////////////////////////////////////////////
-// FIXME: Fix bookshelf moving boundaries and sorting order so that
-//        bookshelf goes behind LibraryBackground
-//      - Use layer masking to hide the bookshelf while it's dragged around (DONE)
+/*
+BUGS TO FIX:
+- When shelves are almost covered by the mask, but the book can still attach to the shelf.
+The book will have a spasm!!!
+- no interaction until gameplay screen
+- shuffling should NOT push books permanently
+*/
 
-//      (DONE)
-//      - Bug: books can still attach to shelves and desks even when shelves are masked/invisible
-//          - Turn off shelfSpots when they're not visible 
-//              if shelf's left border's x position <= mask square's right border's x position
-//                  then leave the shelfSpot activated
-//          - Limit desk boundaries to exclude ones covered by shelf and map
-//          - Get right x-coord of map and left x-coord of shelf for book boundaries
+/*
+Phase 4:
+- Camera center on character
+- Get corresponding dialogue
+- Cassette tape
+- Limit interactions to just gameplay screen
+
+Interaction:
+1. New NPC walks in
+2. Dialogue back and forth
+(3. Another NPC enters)
+3. Gameplay begins (retrieving or organizing)
+4. Repeat from #2 until END
+
+- How to organize dialogue file for branching
+- Each interaction is a single file? Or all shoved in 1 file
+*/
 
 // FIXME: camera shift => library background and character shift? 
 //              use Vector3.toward(...)
 // FIXME: 2. snapshot for the minimap (no live update)
 //        Don't show held book
 //         Minimap will show books that are settled on the shelf (permanently locked to the shelf)
-// FIXME: 3. move desk back to the left screen
-//      Put the desk back and make sure book interactions are working fine.
-//      Move character little bit to the left (so that camera can center them when gameplay begins)
-//      when slider animation plays, center camera on character
-//      slow down minimap sliding speed as minimap gets closer to target position
-//      3.1 Slide in bookshelf (DONE)
-// FIXME: 4. shuffling should NOT push books permanently (bug)
 // FIXME: 5. UI buttons
 // FIXME: 6. Dialogue box (putting in new text and character)
 // FIXME: 7. Cassette tape screen (w/ walkman)
 // FIXME: 8. Finalize sorting rendering orders
 // FIXME: 9. Book and tapes spawning for different days
 //      exact locations
-// FIXME: 10. ghost preview (when book can't be placed down. ANYWHERE)
+// Maybe???: 10. ghost preview (when book can't be placed down. ANYWHERE)
 //          this includes EVERY LOCATION YOU CAN'T PUT THE BOOK DOWN.
 //          (Should the bookshelf screen also have book grayed out?)
 
@@ -86,14 +89,14 @@ public class MouseLMB : MonoBehaviour {
 
     void Start() {
         maxBookCount = 12;
-        bookRadius = 0.7f;
+        bookRadius = 0.05f;
         shelfLayer = 8;
         bookOnShelfLayer = 8;
         bookOnDeskLayer = 9;
-        stackOffsetVal = 0.5f;
+        stackOffsetVal = 0.4f;
         // left-x, right-x, bottom-y, top-y
         deskBounds = new Vector4(-1.4f, 1.4f, -1.62f, -1.17f);
-        shelfBounds = new Vector4(-1.675f, 10f, -7.5f, 10.3f);
+        shelfBounds = new Vector4(2.3f, 10f, -7.5f, 10.3f);
         bookBounds = new Vector4(-1.35f, 6f, -1.8f, 4.4f);
 
         bookOnShelf = false;
@@ -128,6 +131,7 @@ public class MouseLMB : MonoBehaviour {
                 // Disable control of the book movement
                 bookGrabbed = false;
                 grabbedBook = null;
+                Cursor.visible = true;
             }
             else {
                 // Check for colliders that were selected with LMB
@@ -157,7 +161,9 @@ public class MouseLMB : MonoBehaviour {
                                 grabbedBook.GetComponent<SpriteRenderer>();
                             bookRend.sortingOrder = 80;
                             bookRend.maskInteraction = SpriteMaskInteraction.None;
+                            grabbedBook.layer = bookOnDeskLayer;
                             grabbedBook.transform.parent = null;
+                            Cursor.visible = false;
                         }
                         // TODO: click on ">>>" to continue dialogue
                         // TODO: click on "GIVE" to submit books
@@ -214,7 +220,6 @@ public class MouseLMB : MonoBehaviour {
                     shiftedBooks = false;
                 }
                 bookOnShelf = false;
-                grabbedBook.layer = bookOnDeskLayer;
 
                 // Book stacking
                 stackBook = null;
@@ -261,11 +266,17 @@ public class MouseLMB : MonoBehaviour {
             book = grabbedBook;
         }
         Debug.Assert(book != null, "Book object is null.");
+
         if (BookInShelfScreen(book)) {
             book.transform.rotation = Quaternion.Euler(0, 0, 0);
+            book.GetComponent<SpriteRenderer>().maskInteraction =
+                SpriteMaskInteraction.VisibleOutsideMask;
+            
         }
         else {
             book.transform.rotation = Quaternion.Euler(0, 0, 90);
+            book.GetComponent<SpriteRenderer>().maskInteraction = 
+                SpriteMaskInteraction.None;
         }
     }
 
@@ -273,10 +284,10 @@ public class MouseLMB : MonoBehaviour {
         if (!book) return false;
     
         Vector3 bookPos = book.transform.position;
-        if (bookPos.x >= deskBounds.x && bookPos.x <= deskBounds.y) {
-            return false;
+        if (bookPos.x >= shelfBounds.x && bookPos.x <= shelfBounds.y) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     GameObject FindClosestShelf() {
