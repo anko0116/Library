@@ -58,6 +58,9 @@ public class ReadTSV : MonoBehaviour
             else if (lineType == "Text") {
                 StartCoroutine(LoadText());
             }
+            else if (lineType == "Sprite") {
+                StartCoroutine(LoadSprite());
+            }
             else if (lineType == "Animation") {
                 StartCoroutine(LoadAnim());
             }
@@ -65,11 +68,17 @@ public class ReadTSV : MonoBehaviour
     }
 
     IEnumerator LoadScene() {
-        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(currLine[1]);
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name == currLine[1]);
+
         ReadAndParseLine();
-        print("Loadingtext");
+        while (currLine[0] != "Text") {
+            if (currLine[0] == "Sprite") {
+                //yield return LoadSprite();
+            }
+            // FIXME: Will add more soon!!!
+            ReadAndParseLine();
+        }
         yield return LoadText(true);
         tsvLock = false;
         //yield return null;
@@ -78,21 +87,34 @@ public class ReadTSV : MonoBehaviour
     }
 
     IEnumerator LoadText(bool continuation=false) {
-        print("eee");
-        // Find the TextMeshPro for dialogue text
+        // Find TextMeshPro for dialogue text
         inputField = gameObject.GetComponent<TextMeshProUGUI>();
         // Shove that text in TMP
         inputField.text = currLine[2];
-        print("1");
+
+        // Find TextMeshPro for speaker name
+        if (currLine[1] != "/") {
+            Transform nameTransf = gameObject.transform.parent.Find("SpeakerName");
+            TextMeshProUGUI nameField = nameTransf.GetComponent<TextMeshProUGUI>();
+            if (currLine[1] == "-") {
+                nameField.text = "";
+            }
+            else {
+                nameField.text = currLine[1];
+            }
+        }
+
         // Find image component
-        Transform imageTransf = gameObject.transform.parent.Find("SpaceImage");
-        Image image = imageTransf.GetComponent<Image>();
-        // Shove that image
-        Sprite[] spr = Resources.LoadAll<Sprite>("IntroArts/");
-        image.sprite = spr[0];
-        var tempColor = image.color;
-        tempColor.a = 1f;
-        image.color = tempColor;
+        if (currLine[3] != "\r") {
+            Transform imageTransf = gameObject.transform.parent.Find("SpaceImage");
+            Image image = imageTransf.GetComponent<Image>();
+            // Shove that image
+            Sprite[] spr = Resources.LoadAll<Sprite>("IntroArts/");
+            image.sprite = spr[0];
+            var tempColor = image.color;
+            tempColor.a = 1f;
+            image.color = tempColor;
+        }
 
         // Find dialogue button
         Transform buttonTransf = gameObject.transform.parent.Find("DialogueButton");
@@ -100,11 +122,26 @@ public class ReadTSV : MonoBehaviour
         bool clicked = false;
         button.onClick.AddListener(() => {clicked = true;});
         // Wait until button is pressed to continue to next dialogue
-        print("hello");
+        // All tsv line reading runs until IT HITS HERE AT THE DIALOGUE/TEXT LINE - COOL. DIDN'T EVEN INTEND IT
         yield return new WaitUntil(() => clicked);
         if (!continuation) { 
             tsvLock = false;
         }
+    }
+
+    IEnumerator LoadSprite() {
+        // FIXME: currently, this can only hanlde putting in character sprites.
+        // Will need to change if I want to spawn other sprites.
+
+        // Load Sprite from Resources
+        Sprite spr = Resources.Load<Sprite>("Arts/" + currLine[1]);
+        // Find NPCSpot GameObject to place Sprite
+        SpriteRenderer sprSpot = 
+            GameObject.FindWithTag("NPCSpot").GetComponent<SpriteRenderer>();
+        sprSpot.sprite = spr;
+
+        tsvLock = false;
+        yield return null;
     }
 
     IEnumerator LoadAnim() {

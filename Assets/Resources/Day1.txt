@@ -1,7 +1,13 @@
 Scene	IntroScene		
 Text	/	Welcome to Smoky Galaxy	intro_space1.jpeg
-Text	/	Home to daydreamers, deadbeats, housewives, whores, salarymen, swindlers, aristocrats, addicts, grandmas, gamblers, poets, panhandlers, and every supernatural and super natural thing that can be possibly packed into the smallest galaxy ever.	intro_space2
-Text	/	It is also home to deli drive-ins, mom-and-pop dollar shops, bowling alley beer bottles, and street corners of cigarette ashes scattered across billions of planets: enough to call the whole place “Smokers’ Galaxy.”	intro_space1
+Text	/	Home to daydreamers, deadbeats, housewives, whores, salarymen, swindlers, aristocrats, addicts, grandmas, gamblers, poets, panhandlers, and every supernatural and super natural thing that can be possibly packed into the smallest galaxy ever.	intro_space2.jpeg
+Text	/	It is also home to deli drive-ins, mom-and-pop dollar shops, bowling alley beer bottles, and street corners of cigarette ashes scattered across billions of planets: enough to call the whole place “Smokers’ Galaxy.”	intro_space1.jpeg
 Scene	LibraryScene		
 Animation	OpenEyes.Anim		
-Text	Kate	OMG! I just got robbeedd!!! eeek~~	
+Text	-	???	
+Text	-	Oh, Library Girl awake now. Good, good.	
+Text	-	Hello, hello, Library Girl. It is time...	
+Sprite	Dodi		
+Text	Dodi	Yes, yes, it is time to help get books for Dodi!	
+Text	Dodi	Dodi standing here for long time, very patiently waiting. Hello, Library Girl.	
+Text	Kate	(What a weird dream. Did I fall asleep at the front desk?)	
