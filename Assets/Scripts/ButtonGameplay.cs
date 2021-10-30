@@ -20,7 +20,7 @@ public class ButtonGameplay : MonoBehaviour
     float delta;
     bool mapShown;
     Button gameplayButton;
-    bool slide;
+    public bool slide;
 
     void Start()
     {

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+// Attached to the TMP object for dialogue/text in each scene
+
 public class ReadTSV : MonoBehaviour
 {
     public static TextAsset tsvFile;
@@ -12,6 +14,7 @@ public class ReadTSV : MonoBehaviour
     public static int lineCnt;
     public static List<string> currLine;
     public static string sceneName;
+    public static ButtonGameplay playScript;
     TextMeshProUGUI inputField;
     bool tsvLock;
 
@@ -20,14 +23,14 @@ public class ReadTSV : MonoBehaviour
     // https://www.youtube.com/watch?v=unxAhAsqJko
     // https://forum.unity.com/threads/how-to-modify-the-text-of-a-textmeshpro-input-field.765770/
     // https://www.youtube.com/watch?v=CE9VOZivb3I - brackeys transition scene
-    tsvLock = false;
-        if (!tsvFile && !tsvLock) {
-            tsvLock = true;
-            tsvFile = Resources.Load<TextAsset>("Day1");
-            tsvLines = new List<string>(tsvFile.text.Split('\n'));
-            lineCnt = 0;
-            tsvLock = false;
-        }
+        tsvLock = false;
+            if (!tsvFile && !tsvLock) {
+                tsvLock = true;
+                tsvFile = Resources.Load<TextAsset>("Day1");
+                tsvLines = new List<string>(tsvFile.text.Split('\n'));
+                lineCnt = 0;
+                tsvLock = false;
+            }
     }
 
     void Update() {
@@ -63,6 +66,9 @@ public class ReadTSV : MonoBehaviour
             }
             else if (lineType == "Animation") {
                 StartCoroutine(LoadAnim());
+            }
+            else if (lineType == "Gameplay") {
+                StartCoroutine(LoadGameplay());
             }
         }
     }
@@ -139,6 +145,29 @@ public class ReadTSV : MonoBehaviour
         SpriteRenderer sprSpot = 
             GameObject.FindWithTag("NPCSpot").GetComponent<SpriteRenderer>();
         sprSpot.sprite = spr;
+
+        tsvLock = false;
+        yield return null;
+    }
+
+    IEnumerator LoadGameplay() {
+        // Find Gameplay Script
+        playScript = gameObject.transform.parent.Find("GameplayButton")
+            .GetComponent<ButtonGameplay>();
+        // Find DialogueButton
+        Transform buttonTransf = gameObject.transform.parent.Find("DialogueButton");
+        Image buttonImg = buttonTransf.GetComponent<Image>();
+        if (!playScript.slide) {
+            buttonImg.sprite = Resources.Load<Sprite>("Arts/give");
+        }
+        else {
+            buttonImg.sprite = Resources.Load<Sprite>("Arts/next");
+        }
+        playScript.slide = !playScript.slide;
+
+        // Wait until correct books are on table and press give button
+        bool booksGiven = false;
+        yield return new WaitUntil(() => booksGiven);
 
         tsvLock = false;
         yield return null;
