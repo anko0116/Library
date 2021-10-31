@@ -17,6 +17,7 @@ public class ButtonGameplay : MonoBehaviour
     Vector3 npcInitPos;
     Vector3 npcTargetPos;
     List<List<GameObject>> npcSpots;
+    List<GameObject> deskBooks;
 
     float delta;
     bool mapShown;
@@ -52,11 +53,13 @@ public class ButtonGameplay : MonoBehaviour
         slide = true;
     }
 
-    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 npcPos) {
+    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos, 
+        ref Vector3 npcPos) {
         // TODO: slow down delta
         minimap.transform.position = Vector3.MoveTowards(mapPos, mapTargetPos, delta*2);
         bookshelf.transform.position = Vector3.MoveTowards(shelfPos, shelfTargetPos, delta);
         npcSpots[0][0].transform.position = Vector3.MoveTowards(npcPos, npcTargetPos, delta);
+        // Move books to where the NPC is being moved
     }
 
     void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 npcPos) {
@@ -88,5 +91,16 @@ public class ButtonGameplay : MonoBehaviour
             }
         }
         
+    }
+
+    public List<GameObject> CheckBooksOnDesk(ref HashSet<string> correctBooks) {
+        List<GameObject> outputList = new List<GameObject>();
+        GameObject[] deskBooks = GameObject.FindGameObjectsWithTag("DeskBook");
+        foreach(GameObject book in deskBooks) {
+            if (correctBooks.Contains(book.name)) {
+                outputList.Add(book);
+            }
+        }
+        return outputList;
     }
 }

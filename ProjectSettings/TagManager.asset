@@ -7,6 +7,7 @@ TagManager:
   - Book
   - Shelf
   - NPCSpot
+  - DeskBook
   layers:
   - Default
   - TransparentFX

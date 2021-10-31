@@ -185,9 +185,24 @@ public class ReadTSV : MonoBehaviour
         npcSpot.transform.position = Vector3.MoveTowards(npcSpot.transform.position, newNpcSpot, 0.01f);
         */
 
+        Button button = buttonTransf.GetComponent<Button>();
+        bool clicked = false;
+        button.onClick.AddListener(() => {clicked = true;});
+
+        // Get list of books for gameplay
+        //List<string> books = new List<string>(currLine[1].Split(','));
+        HashSet<string> books = new HashSet<string>(currLine[1].Split(','));
+        int bookCount = books.Count;
         // Wait until correct books are on table and press give button
         bool booksGiven = false;
-        yield return new WaitUntil(() => booksGiven);
+        while (!booksGiven) {
+            yield return new WaitUntil(() => clicked);
+            List<GameObject> deskBooks = playScript.CheckBooksOnDesk(ref books);
+            if (deskBooks.Count == bookCount) {
+                booksGiven = true;
+                print("hello");
+            }
+        }
 
         tsvLock = false;
         yield return null;

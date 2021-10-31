@@ -140,7 +140,7 @@ public class MouseLMB : MonoBehaviour {
                     foreach (RaycastHit2D hit in hits) {
                         GameObject currObj = hit.collider.gameObject;
 
-                        if (!bookGrabbed && currObj.tag == "Book") {
+                        if (!bookGrabbed && (currObj.tag == "Book" || currObj.tag == "DeskBook")) {
                             Transform currParent = currObj.transform.parent;
                             bool hasChildBook = false;
                             // If book is in the middle of the stack
@@ -271,12 +271,13 @@ public class MouseLMB : MonoBehaviour {
             book.transform.rotation = Quaternion.Euler(0, 0, 0);
             book.GetComponent<SpriteRenderer>().maskInteraction =
                 SpriteMaskInteraction.VisibleOutsideMask;
-            
+            book.tag = "Book";
         }
         else {
             book.transform.rotation = Quaternion.Euler(0, 0, 90);
             book.GetComponent<SpriteRenderer>().maskInteraction = 
                 SpriteMaskInteraction.None;
+            book.tag = "DeskBook";
         }
     }
 
@@ -354,7 +355,7 @@ public class MouseLMB : MonoBehaviour {
         Collider2D closestBook = null;
         float closestDist = float.MaxValue;
         foreach (Collider2D coll in books) {
-            if (coll.gameObject.tag != "Book") continue;
+            if (coll.gameObject.tag != "DeskBook") continue;
             if (coll.gameObject == grabbedBook) continue;
 
             Vector3 bookPos = coll.transform.position;

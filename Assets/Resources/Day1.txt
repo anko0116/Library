@@ -11,4 +11,4 @@ Sprite	Dodi
 Text	Dodi	Yes, yes, it is time to help get books for Dodi!	
 Text	Dodi	Dodi standing here for long time, very patiently waiting. Hello, Library Girl.	
 Text	Kate	(What a weird dream. Did I fall asleep at the front desk?)	
-Gameplay			
+Gameplay	WhaleBook,CrabBook		
