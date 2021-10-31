@@ -24,13 +24,19 @@ public class ReadTSV : MonoBehaviour
     // https://forum.unity.com/threads/how-to-modify-the-text-of-a-textmeshpro-input-field.765770/
     // https://www.youtube.com/watch?v=CE9VOZivb3I - brackeys transition scene
         tsvLock = false;
-            if (!tsvFile && !tsvLock) {
-                tsvLock = true;
-                tsvFile = Resources.Load<TextAsset>("Day1");
-                tsvLines = new List<string>(tsvFile.text.Split('\n'));
-                lineCnt = 0;
-                tsvLock = false;
-            }
+        if (!tsvFile && !tsvLock) {
+            tsvLock = true;
+            tsvFile = Resources.Load<TextAsset>("Day1");
+            tsvLines = new List<string>(tsvFile.text.Split('\n'));
+            lineCnt = 0;
+            tsvLock = false;
+        }
+
+        // Change mouse cursor
+        Texture2D cursorTexture = Resources.Load<Texture2D>("Arts/cursor");
+        CursorMode cursorMode = CursorMode.Auto;
+        Vector2 hotSpot = Vector2.zero;
+        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
     }
 
     void Update() {
@@ -157,6 +163,7 @@ public class ReadTSV : MonoBehaviour
         // Find DialogueButton
         Transform buttonTransf = gameObject.transform.parent.Find("DialogueButton");
         Image buttonImg = buttonTransf.GetComponent<Image>();
+        // Change DialogueButton's sprite
         if (!playScript.slide) {
             buttonImg.sprite = Resources.Load<Sprite>("Arts/give");
         }
@@ -164,6 +171,19 @@ public class ReadTSV : MonoBehaviour
             buttonImg.sprite = Resources.Load<Sprite>("Arts/next");
         }
         playScript.slide = !playScript.slide;
+
+        // Center on NPC - move LibraryBackground and NPC sprites
+        // Assume they're in the center
+        /* Don't do this here!
+        GameObject libraryBack = GameObject.Find("LibraryBackground");
+        GameObject npcSpot = GameObject.Find("NPCSpot");
+        Vector3 libraryPos = libraryBack.transform.position;
+        Vector3 npcPos = npcSpot.transform.position;
+        Vector3 newLibraryPos = new Vector3(libraryPos.x - 4f, libraryPos.y, libraryPos.z);
+        libraryBack.transform.position = Vector3.MoveTowards(libraryBack.transform.position, newLibraryPos, 0.01f);
+        Vector3 newNpcSpot = new Vector3(npcPos.x - 4f, npcPos.y, npcPos.z);
+        npcSpot.transform.position = Vector3.MoveTowards(npcSpot.transform.position, newNpcSpot, 0.01f);
+        */
 
         // Wait until correct books are on table and press give button
         bool booksGiven = false;

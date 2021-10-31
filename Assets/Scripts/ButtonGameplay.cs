@@ -14,63 +14,66 @@ public class ButtonGameplay : MonoBehaviour
     Vector3 mapTargetPos;
     Vector3 shelfInitPos;
     Vector3 shelfTargetPos;
-    Vector3 borderInitPos;
-    Vector3 borderTargetPos;
+    Vector3 npcInitPos;
+    Vector3 npcTargetPos;
+    List<List<GameObject>> npcSpots;
 
     float delta;
     bool mapShown;
     Button gameplayButton;
     public bool slide;
+    public int spotIdx; 
 
-    void Start()
-    {
+    void Start() {
         gameplayButton = GetComponent<Button>();
         gameplayButton.onClick.AddListener(TaskOnClick);
 
         minimap = GameObject.Find("MapCanvas").transform.GetChild(0).gameObject;
         bookshelf = GameObject.Find("Bookshelf");
-        blackBorder = GameObject.Find("BlackBorder");
+
+        npcSpots = new List<List<GameObject>>();
+        npcSpots.Add(new List<GameObject>());
+        npcSpots[0].Add(GameObject.Find("NPCSpot"));
 
         mapInitPos = minimap.transform.position;
-        mapTargetPos = new Vector3(-3.63f, mapInitPos.y, 0f);
+        mapTargetPos = new Vector3(-1.6f, mapInitPos.y, 0f);
         shelfInitPos = bookshelf.transform.position;
-        shelfTargetPos = new Vector3(10.04f, shelfInitPos.y, 0f);
-        borderInitPos = blackBorder.transform.position;
-        borderTargetPos = new Vector3(2.1f, borderInitPos.y, 0f);
+        shelfTargetPos = new Vector3(10.64f, shelfInitPos.y, 0f);
+        npcInitPos = npcSpots[0][0].transform.position;
+        npcTargetPos = new Vector3(npcInitPos.x - 4.5f, npcInitPos.y, 0f);
 
-        delta = 0.1f;
+        delta = 0.05f;
         mapShown = false;
         slide = false;
+        spotIdx = 0;
     }
 
     void TaskOnClick() {
         slide = true;
     }
 
-    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 borderPos) {
+    void MoveMapInside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 npcPos) {
         // TODO: slow down delta
-        minimap.transform.position = Vector3.MoveTowards(mapPos, mapTargetPos, delta);
+        minimap.transform.position = Vector3.MoveTowards(mapPos, mapTargetPos, delta*2);
         bookshelf.transform.position = Vector3.MoveTowards(shelfPos, shelfTargetPos, delta);
-        blackBorder.transform.position = Vector3.MoveTowards(borderPos, borderTargetPos, delta);
+        npcSpots[0][0].transform.position = Vector3.MoveTowards(npcPos, npcTargetPos, delta);
     }
 
-    void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 borderPos) {
+    void MoveMapOutside(ref Vector3 mapPos, ref Vector3 shelfPos, ref Vector3 npcPos) {
         // TODO: slow down delta
         minimap.transform.position = 
-            Vector3.MoveTowards(mapPos, mapInitPos, delta);
+            Vector3.MoveTowards(mapPos, mapInitPos, delta*2);
         bookshelf.transform.position =
             Vector3.MoveTowards(shelfPos, shelfInitPos, delta);
-        blackBorder.transform.position =
-            Vector3.MoveTowards(borderPos, borderInitPos, delta);
+        npcSpots[0][0].transform.position = Vector3.MoveTowards(npcPos, npcInitPos, delta);
     }
-
 
     void Update()
     {
+        Vector3 mapPos = minimap.transform.position;
+        Vector3 shelfPos = bookshelf.transform.position;
+        Vector3 npcPos = npcSpots[0][0].transform.position;
         if (slide) {
-            Vector3 mapPos = minimap.transform.position;
-            Vector3 shelfPos = bookshelf.transform.position;
-            Vector3 borderPos = blackBorder.transform.position;
             if (mapShown && mapPos == mapInitPos) {
                 slide = false;
                 mapShown = false;
@@ -80,8 +83,8 @@ public class ButtonGameplay : MonoBehaviour
                 mapShown = true;
             }
             else {
-                if (mapShown) MoveMapOutside(ref mapPos, ref shelfPos, ref borderPos);
-                else MoveMapInside(ref mapPos, ref shelfPos, ref borderPos);
+                if (mapShown) MoveMapOutside(ref mapPos, ref shelfPos, ref npcPos);
+                else MoveMapInside(ref mapPos, ref shelfPos, ref npcPos);
             }
         }
         
